@@ -2,6 +2,8 @@ import java.sql.*;
 import java.util.HashMap;
 import java.util.ArrayList;
 import java.util.Map;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -16,7 +18,7 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
 public class Main {
 
   public static void main(String[] args) {
-
+  Gson x = new GsonBuilder().create();
     port(Integer.valueOf(System.getenv("PORT")));
     staticFileLocation("/public");
 
