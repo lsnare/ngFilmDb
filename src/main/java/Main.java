@@ -17,7 +17,7 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
 
 public class Main {
 
-  public static void main(String[] args) {
+  public static void mainA(String[] args) {
     port(Integer.valueOf(System.getenv("PORT")));
     staticFileLocation("/public");
 
