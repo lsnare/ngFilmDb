@@ -1,4 +1,4 @@
-package main.model;
+package com.lsnare.film.model;
 import java.util.List;
 
 
@@ -7,6 +7,11 @@ public class Film {
     public class Actor {
         public String actorId;
         public String actorName;
+        public String character;
+        public Boolean main;
+        public String urlCharacter;
+        public String urlPhoto;
+        public String urlProfile;
 
         public String getActorId() {
             return actorId;
@@ -64,20 +69,15 @@ public class Film {
             this.urlProfile = urlProfile;
         }
 
-        public String character;
-        public Boolean main;
-        public String urlCharacter;
-        public String urlPhoto;
-        public String urlProfile;
-
         public String toString(){
-            String actorString = this.getActorName() + "\n" + this.getActorId() + "\n\n";
+            String actorString = "* " + this.getActorName() + "\n  " + this.getActorId() + "\n";
             return actorString;
         }
     }
 
     public class Director {
         public String name;
+        public String nameId;
 
         public String getNameId() {
             return nameId;
@@ -94,8 +94,6 @@ public class Film {
         public void setName(String name) {
             this.name = name;
         }
-
-        public String nameId;
 
         public String toString(){
             String directorString = this.getName() + "\n" + this.getNameId() +"\n\n";
@@ -115,6 +113,21 @@ public class Film {
     public String plot;
     public String rated;
     public String rating;
+    public String releaseDate;
+    public List<String> runtime;
+    public String simplePlot;
+    public String title;
+    public String type;
+    public String urlIMDB;
+    public String urlPoster;
+    public String votes;
+    public List<Director> writers;
+    public int year;
+
+    public Film(String title, int year){
+        this.title = title;
+        this.year = year;
+    }
 
     public List<Actor> getActors() {
         return actors;
@@ -284,24 +297,13 @@ public class Film {
         this.writers = writers;
     }
 
-    public String getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(String year) {
+    public void setYear(int year) {
         this.year = year;
     }
-
-    public String releaseDate;
-    public List<String> runtime;
-    public String simplePlot;
-    public String title;
-    public String type;
-    public String urlIMDB;
-    public String urlPoster;
-    public String votes;
-    public List<Director> writers;
-    public String year;
 
     public String toString(){
         String filmString = this.getTitle() + "\n" + this.getPlot() + "\n\n" + "Cast: \n";

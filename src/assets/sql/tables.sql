@@ -7,13 +7,13 @@ CREATE TABLE film (
 idIMDB VARCHAR(25) PRIMARY KEY NOT NULL,
 title VARCHAR(75) NOT NULL,
 plot TEXT,
-year INT,
-runtime INT
+year INT
 ); 
 
 CREATE TABLE actor_film_role(
 actorId VARCHAR(25) REFERENCES actor(actorId),
-idIMDB VARCHAR(25) REFERENCES film(idIMDB)
+idIMDB VARCHAR(25) REFERENCES film(idIMDB),
+role VARCHAR(75)
 );
 
 CREATE TABLE director(
