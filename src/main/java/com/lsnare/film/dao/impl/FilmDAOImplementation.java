@@ -12,13 +12,57 @@ import java.sql.*;
 public class FilmDAOImplementation implements FilmDAO{
 
     private DataSource dataSource;
+    private Film film;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
     }
 
-    public void insert(Film film){
+    public void insertActors(Connection conn){
+        String sqlActor = "INSERT INTO actor VALUES(?,?)";
+        String sqlActorFilmRole = "INSERT INTO actor_film_role VALUES(?,?,?)";
+        for(Film.Actor a : this.film.getActors()){
+            try {
+                PreparedStatement psActor = conn.prepareStatement(sqlActor);
+                psActor.setString(1, a.getActorId());
+                psActor.setString(2, a.getActorName());
+                psActor.execute();
 
+                PreparedStatement psActorFilmRole = conn.prepareStatement(sqlActorFilmRole);
+                psActorFilmRole.setString(1, a.getActorId());
+                psActorFilmRole.setString(2, this.film.getIdIMDB());
+                psActorFilmRole.setString(3, a.getCharacter());
+                psActorFilmRole.execute();
+            } catch (SQLException e) {
+
+            }
+        }
+
+    }
+
+    public void insertDirectors(Connection conn){
+        String sqlDirector = "INSERT INTO director VALUES(?,?)";
+        String sqlDirectorFilmAssignment = "INSERT INTO director_film_assignment VALUES(?,?)";
+        for(Film.Director d : this.film.getDirectors()){
+            try {
+                PreparedStatement psDirector = conn.prepareStatement(sqlDirector);
+                psDirector.setString(1, d.getNameId());
+                psDirector.setString(2, d.getName());
+                psDirector.execute();
+
+                PreparedStatement psDirectorFilmAssignment = conn.prepareStatement(sqlDirectorFilmAssignment);
+                psDirectorFilmAssignment.setString(1, d.getNameId());
+                psDirectorFilmAssignment.setString(2, this.film.getIdIMDB());
+                psDirectorFilmAssignment.execute();
+            } catch (SQLException e) {
+
+            }
+        }
+
+    }
+
+    public void insert(Film film){
+        this.film = film;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
         Connection conn = null;
         try{
@@ -30,6 +74,8 @@ public class FilmDAOImplementation implements FilmDAO{
             ps.setString(3, film.getPlot());
             ps.setInt(4, film.getYear());
             ps.execute();
+            insertActors(conn);
+            insertDirectors(conn);
             ps.close();
             System.out.println("Success");
         } catch (Exception e) {

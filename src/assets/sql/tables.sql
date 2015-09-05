@@ -21,7 +21,7 @@ nameId VARCHAR(25) PRIMARY KEY NOT NULL,
 name VARCHAR(75) NOT NULL
 );
 
-CREATE TABLE director_film_assignments(
+CREATE TABLE director_film_assignment(
 directorId VARCHAR(25) REFERENCES director(nameId),
 filmId VARCHAR(25) REFERENCES film(idIMDB)
 );
