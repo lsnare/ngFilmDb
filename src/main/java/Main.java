@@ -26,11 +26,11 @@ public class Main {
     get("/hello", (req, res) -> "Hello World");
 
     get("/", (request, response) -> {
-            Map<String, Object> attributes = new HashMap<>();
-            attributes.put("message", "Hello World!");
+      Map<String, Object> attributes = new HashMap<>();
+      attributes.put("message", "Hello World!");
 
-            return new ModelAndView(attributes, "index.ftl");
-        }, new FreeMarkerEngine());
+      return new ModelAndView(attributes, "index.ftl");
+    }, new FreeMarkerEngine());
 
     get("/film", (request, response) -> {
       Map<String, Object> attributes = new HashMap<>();
@@ -42,9 +42,13 @@ public class Main {
     post("/film", (request, response) -> {
       Map<String, Object> attributes = new HashMap<>();
       attributes.put("message", "POSTed!");
-      HTTPService.postTest();
+      try {
+        HTTPService.postTest();
+      } catch (Exception e) {
+        attributes.put("error", e.getMessage());
+      }
       return new ModelAndView(attributes, "filmSearch.ftl");
-            }, new FreeMarkerEngine());
+    }, new FreeMarkerEngine());
 
     get("/db", (req, res) -> {
       Connection connection = null;
