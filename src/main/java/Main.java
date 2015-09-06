@@ -9,6 +9,8 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import static spark.Spark.*;
+
+import com.lsnare.film.service.HTTPService;
 import spark.template.freemarker.FreeMarkerEngine;
 import spark.ModelAndView;
 import static spark.Spark.get;
@@ -40,6 +42,7 @@ public class Main {
     post("/film", (request, response) -> {
       Map<String, Object> attributes = new HashMap<>();
       attributes.put("message", "POSTed!");
+      HTTPService.postTest();
       return new ModelAndView(attributes, "filmSearch.ftl");
             }, new FreeMarkerEngine());
 

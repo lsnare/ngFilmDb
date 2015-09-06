@@ -17,9 +17,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class HTTPService {
 
-    public static void main(String[] args){
+    public static void postTest(){
         try{
-            String res = sendGet("http://www.myapifilms.com/imdb?title=reservoir%20dogs&format=JSON&lang=en-us&actors=S");
+            String res = sendGet("http://www.myapifilms.com/imdb?title=mulholland%20dr&format=JSON&lang=en-us&actors=S");
 
             Gson gson = new GsonBuilder().create();
             Film film = gson.fromJson(res.substring(1, res.length()-1), Film.class);
