@@ -17,9 +17,9 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
  */
 public class HTTPService {
 
-    public static void postTest(){
+    public static String postTest(String filmTitle){
         try{
-            String res = sendGet("http://www.myapifilms.com/imdb?title=mulholland%20dr&format=JSON&lang=en-us&actors=S");
+            String res = sendGet("http://www.myapifilms.com/imdb?title=" + filmTitle +"&format=JSON&lang=en-us&actors=S");
 
             Gson gson = new GsonBuilder().create();
             Film film = gson.fromJson(res.substring(1, res.length()-1), Film.class);
@@ -27,13 +27,16 @@ public class HTTPService {
             System.out.print(film.toString());
 
             ApplicationContext context =
-                    new ClassPathXmlApplicationContext("main/resources/Spring-Module.xml");
+                    new ClassPathXmlApplicationContext("Spring-Module.xml");
             FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
             filmDAO.insert(film);
 
         } catch(Exception e){
             System.out.println(e.getMessage());
+            return e.getMessage();
         }
+
+        return "Film added to the database successfully!";
 
     }
 
