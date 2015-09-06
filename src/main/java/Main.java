@@ -30,6 +30,19 @@ public class Main {
             return new ModelAndView(attributes, "index.ftl");
         }, new FreeMarkerEngine());
 
+    get("/film", (request, response) -> {
+      Map<String, Object> attributes = new HashMap<>();
+      attributes.put("message", "Hello World!");
+
+      return new ModelAndView(attributes, "filmSearch.ftl");
+    }, new FreeMarkerEngine());
+
+    post("/film", (request, response) -> {
+      Map<String, Object> attributes = new HashMap<>();
+      attributes.put("message", "POSTed!");
+      return new ModelAndView(attributes, "filmSearch.ftl");
+            }, new FreeMarkerEngine());
+
     get("/db", (req, res) -> {
       Connection connection = null;
       Map<String, Object> attributes = new HashMap<>();
@@ -43,7 +56,7 @@ public class Main {
 
         ArrayList<String> output = new ArrayList<String>();
         while (rs.next()) {
-          output.add( "Read from DB: " + rs.getTimestamp("tick"));
+          output.add("Read from DB: " + rs.getTimestamp("tick"));
         }
 
         attributes.put("results", output);
@@ -52,7 +65,10 @@ public class Main {
         attributes.put("message", "There was an error: " + e);
         return new ModelAndView(attributes, "error.ftl");
       } finally {
-        if (connection != null) try{connection.close();} catch(SQLException e){}
+        if (connection != null) try {
+          connection.close();
+        } catch (SQLException e) {
+        }
       }
     }, new FreeMarkerEngine());
 
