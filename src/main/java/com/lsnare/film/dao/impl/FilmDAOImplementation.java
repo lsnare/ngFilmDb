@@ -5,6 +5,7 @@ import com.lsnare.film.model.Film;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.List;
 
 /**
  * Created by lucian on 9/2/15.
@@ -19,6 +20,7 @@ public class FilmDAOImplementation implements FilmDAO{
     }
 
     public void insertActors(Connection conn){
+
         String sqlActor = "INSERT INTO actor VALUES(?,?)";
         String sqlActorFilmRole = "INSERT INTO actor_film_role VALUES(?,?,?)";
         for(Film.Actor a : this.film.getActors()){
@@ -27,17 +29,21 @@ public class FilmDAOImplementation implements FilmDAO{
                 psActor.setString(1, a.getActorId());
                 psActor.setString(2, a.getActorName());
                 psActor.execute();
-
-                PreparedStatement psActorFilmRole = conn.prepareStatement(sqlActorFilmRole);
-                psActorFilmRole.setString(1, a.getActorId());
-                psActorFilmRole.setString(2, this.film.getIdIMDB());
-                psActorFilmRole.setString(3, a.getCharacter());
-                psActorFilmRole.execute();
             } catch (SQLException e) {
-
+                System.out.println(e.getMessage());
+            } finally {
+                //if an actor already exists, we still need to create an actor film role link
+                try {
+                    PreparedStatement psActorFilmRole = conn.prepareStatement(sqlActorFilmRole);
+                    psActorFilmRole.setString(1, a.getActorId());
+                    psActorFilmRole.setString(2, this.film.getIdIMDB());
+                    psActorFilmRole.setString(3, a.getCharacter());
+                    psActorFilmRole.execute();
+                } catch (Exception e) {
+                    System.out.println(e.getMessage());
+                }
             }
         }
-
     }
 
     public void insertDirectors(Connection conn){
@@ -49,16 +55,42 @@ public class FilmDAOImplementation implements FilmDAO{
                 psDirector.setString(1, d.getNameId());
                 psDirector.setString(2, d.getName());
                 psDirector.execute();
-
-                PreparedStatement psDirectorFilmAssignment = conn.prepareStatement(sqlDirectorFilmAssignment);
-                psDirectorFilmAssignment.setString(1, d.getNameId());
-                psDirectorFilmAssignment.setString(2, this.film.getIdIMDB());
-                psDirectorFilmAssignment.execute();
             } catch (SQLException e) {
-
+                System.out.println(e.getMessage());
+            } finally {
+                try {
+                    PreparedStatement psDirectorFilmAssignment = conn.prepareStatement(sqlDirectorFilmAssignment);
+                    psDirectorFilmAssignment.setString(1, d.getNameId());
+                    psDirectorFilmAssignment.setString(2, this.film.getIdIMDB());
+                    psDirectorFilmAssignment.execute();
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
             }
         }
+    }
 
+    public void insertGenres(Connection conn){
+        String sqlGenre = "INSERT INTO genre VALUES(?)";
+        String sqlFilmGenre = "INSERT INTO film_genre VALUES(?,?)";
+        for(String g : this.film.getGenres()){
+            try {
+                PreparedStatement psGenre = conn.prepareStatement(sqlGenre);
+                psGenre.setString(1, g);
+                psGenre.execute();
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+            } finally {
+                try {
+                    PreparedStatement psFilmGenre = conn.prepareStatement(sqlFilmGenre);
+                    psFilmGenre.setString(1, g);
+                    psFilmGenre.setString(2, this.film.getIdIMDB());
+                    psFilmGenre.execute();
+                } catch (Exception e){
+                    System.out.println(e.getMessage());
+                }
+            }
+        }
     }
 
     public void insert(Film film){

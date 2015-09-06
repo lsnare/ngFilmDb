@@ -19,7 +19,7 @@ public class HTTPService {
 
     public static void main(String[] args){
         try{
-            String res = sendGet("http://www.myapifilms.com/imdb?title=pulp%20fiction&format=JSON&year=1994&lang=en-us&actors=S");
+            String res = sendGet("http://www.myapifilms.com/imdb?title=reservoir%20dogs&format=JSON&lang=en-us&actors=S");
 
             Gson gson = new GsonBuilder().create();
             Film film = gson.fromJson(res.substring(1, res.length()-1), Film.class);
