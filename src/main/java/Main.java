@@ -37,7 +37,7 @@ public class Main {
       return new ModelAndView(attributes, "filmSearch.ftl");
     }, new FreeMarkerEngine());
 
-    post("/film", (request, response) -> {
+    post("/film2", (request, response) -> {
       Map<String, Object> attributes = new HashMap<>();
       attributes.put("message", "POSTed!");
       return new ModelAndView(attributes, "filmSearch.ftl");
