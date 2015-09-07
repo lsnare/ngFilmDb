@@ -1,9 +1,4 @@
-<form action = "/film" method = "post">
-    <input type="text" name="filmTitle"/> <input type="submit" name="add" value="Add a Film" />
-    ${message}
-</form>
-
-<form action = "/filmSearch" method = "post">
+<form action = "/search" method = "post">
     <input type="text" name="filmTitleSearch"/> <input type="submit" name="add" value="Search for a Film" />
 </form>
 

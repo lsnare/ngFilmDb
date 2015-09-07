@@ -42,21 +42,38 @@ public class Main {
           return new ModelAndView(attributes, "index.ftl");
       }, new FreeMarkerEngine());
 
-    get("/film", (request, response) -> {
-      Map<String, Object> attributes = new HashMap<>();
-      attributes.put("message", "Hello World!");
+      //Page for adding a film to the database
+      get("/add", (request, response) -> {
+          Map<String, Object> attributes = new HashMap<>();
+          attributes.put("message", "Hello World!");
+          return new ModelAndView(attributes, "addFilm.ftl");
+      }, new FreeMarkerEngine());
 
-      return new ModelAndView(attributes, "film.ftl");
-    }, new FreeMarkerEngine());
+      post("/add", (request, response) -> {
+          Map<String, Object> attributes = new HashMap<>();
+          String res = "";
+          String filmTitle = request.queryParams("filmTitle");
 
-      get("/filmSearch", (request, response) -> {
+          try {
+              filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
+              res = HTTPService.postTest(filmTitle);
+          } catch (Exception e) {
+              attributes.put("message", e.getMessage());
+          } finally {
+              attributes.put("message", res);
+          }
+          return new ModelAndView(attributes, "addFilm.ftl");
+      }, new FreeMarkerEngine());
+
+      //Search for a film in the database
+      get("/search", (request, response) -> {
           Map<String, Object> attributes = new HashMap<>();
           attributes.put("message", "Hello World!");
 
-          return new ModelAndView(attributes, "filmTitleSearch.ftl");
+          return new ModelAndView(attributes, "searchFilm.ftl");
       }, new FreeMarkerEngine());
 
-    post("/filmSearch", (request, response) -> {
+    post("/search", (request, response) -> {
         Map<String, Object> attributes = new HashMap<>();
         Film result = new Film();
         String filmTitle = request.queryParams("filmTitleSearch");
@@ -75,23 +92,7 @@ public class Main {
             attributes.put("message", "good");
         }
 
-        return new ModelAndView(attributes, "filmSearchResults.ftl");
-    }, new FreeMarkerEngine());
-
-    post("/film", (request, response) -> {
-        Map<String, Object> attributes = new HashMap<>();
-        String res = "";
-        String filmTitle = request.queryParams("filmTitle");
-        
-        try {
-            filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
-            res = HTTPService.postTest(filmTitle);
-        } catch (Exception e) {
-            attributes.put("message", e.getMessage());
-        } finally {
-            attributes.put("message", res);
-        }
-        return new ModelAndView(attributes, "film.ftl");
+        return new ModelAndView(attributes, "searchFilm.ftl");
     }, new FreeMarkerEngine());
 
       get("/db", (req, res) -> {
