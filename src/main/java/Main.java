@@ -42,7 +42,7 @@ public class Main {
       return new ModelAndView(attributes, "film.ftl");
     }, new FreeMarkerEngine());
 
-    get("/filmSearch", (request, response) -> {
+    post("/filmSearch", (request, response) -> {
       Map<String, Object> attributes = new HashMap<>();
       Film result = new Film();
       String filmTitle = request.queryParams("filmTitleSearch");

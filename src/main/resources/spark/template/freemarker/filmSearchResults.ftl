@@ -3,7 +3,7 @@
     ${message}
 </form>
 
-<form action = "/filmSearch" method = "get">
+<form action = "/filmSearch" method = "post">
     <input type="text" name="filmTitleSearch"/> <input type="submit" name="add" value="Search for a Film" />
 </form>
 
