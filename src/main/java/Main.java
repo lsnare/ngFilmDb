@@ -81,7 +81,7 @@ public class Main {
         try {
             System.out.println("In try block in main");
             filmTitle = filmTitle.replace('+', ' ');
-            filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
+            //filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
             System.out.println("In try block in main after decode: " + filmTitle);
             result = HTTPService.searchTest(filmTitle);
             System.out.println("Result: " + result.getTitle() + " " + result.getIdIMDB() + " " + result.getYear() + " " + result.getPlot());
