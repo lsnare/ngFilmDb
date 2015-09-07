@@ -46,10 +46,11 @@ public class Main {
       Map<String, Object> attributes = new HashMap<>();
       Film result = new Film();
       String filmTitle = request.queryParams("filmTitleSearch");
-
+      System.out.println("param: " + filmTitle);
       try {
         filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
         result = HTTPService.searchTest(filmTitle);
+        System.out.println("Result: " + result);
         attributes.put("idIMDB", result.getIdIMDB());
         attributes.put("title", result.getTitle());
         attributes.put("plot", result.getPlot());
