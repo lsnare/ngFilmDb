@@ -11,6 +11,7 @@ import java.net.URISyntaxException;
 
 import static spark.Spark.*;
 
+import com.lsnare.film.model.Film;
 import com.lsnare.film.service.HTTPService;
 
 import spark.template.freemarker.FreeMarkerEngine;
@@ -38,7 +39,28 @@ public class Main {
       Map<String, Object> attributes = new HashMap<>();
       attributes.put("message", "Hello World!");
 
-      return new ModelAndView(attributes, "filmSearch.ftl");
+      return new ModelAndView(attributes, "film.ftl");
+    }, new FreeMarkerEngine());
+
+    get("/filmSearch", (request, response) -> {
+      Map<String, Object> attributes = new HashMap<>();
+      Film result = new Film();
+      String filmTitle = request.queryParams("filmTitleSearch");
+
+      try {
+        filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
+        result = HTTPService.searchTest(filmTitle);
+        attributes.put("idIMDB", result.getIdIMDB());
+        attributes.put("title", result.getTitle());
+        attributes.put("plot", result.getPlot());
+        attributes.put("year", result.getYear());
+      } catch (Exception e) {
+        attributes.put("message", e.getMessage());
+      } finally {
+        attributes.put("message", "good");
+      }
+
+      return new ModelAndView(attributes, "filmSearchResults.ftl");
     }, new FreeMarkerEngine());
 
     post("/film", (request, response) -> {
@@ -54,7 +76,7 @@ public class Main {
         } finally {
             attributes.put("message", res);
         }
-        return new ModelAndView(attributes, "filmSearch.ftl");
+        return new ModelAndView(attributes, "film.ftl");
     }, new FreeMarkerEngine());
 
       get("/db", (req, res) -> {

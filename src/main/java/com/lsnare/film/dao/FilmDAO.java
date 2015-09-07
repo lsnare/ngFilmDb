@@ -5,5 +5,5 @@ import com.lsnare.film.model.Film;
  */
 public interface FilmDAO {
     public void insert(Film film);
-    //public Film findFilmByImdbId(String imdbId);
+    public Film selectFilms(String title);
 }

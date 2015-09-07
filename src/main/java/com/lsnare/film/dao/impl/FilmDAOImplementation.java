@@ -12,6 +12,7 @@ import java.util.List;
  */
 public class FilmDAOImplementation implements FilmDAO{
 
+    String error = "";
     private DataSource dataSource;
     private Film film;
 
@@ -40,7 +41,7 @@ public class FilmDAOImplementation implements FilmDAO{
                     psActorFilmRole.setString(3, a.getCharacter());
                     psActorFilmRole.execute();
                 } catch (Exception e) {
-                    System.out.println(e.getMessage());
+                    error += "\n" + e.getMessage();
                 }
             }
         }
@@ -93,11 +94,11 @@ public class FilmDAOImplementation implements FilmDAO{
         }
     }
 
-    public void insert(Film film){
+    public void insert(Film film) {
         this.film = film;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
         Connection conn = null;
-        try{
+        try {
             System.out.println("Before connection");
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
@@ -116,9 +117,36 @@ public class FilmDAOImplementation implements FilmDAO{
             if (conn != null) {
                 try {
                     conn.close();
-                } catch (SQLException e) {}
+                } catch (SQLException e) {
+                }
             }
         }
+    }
+
+    public Film selectFilms(String filmTitle) {
+        String sql = "SELECT * FROM film WHERE title = ?";
+        Connection conn = null;
+        try {
+            System.out.println("Before connection");
+            conn = dataSource.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, filmTitle);
+            ResultSet rs = ps.executeQuery();
+            ps.close();
+            Film film = new Film(rs.getString("idIMDB"), rs.getString("title"), rs.getString("plot"), rs.getInt("year"));
+            return film;
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                }
+            }
+        }
+        return null;
+    }
 
 
 
@@ -147,4 +175,3 @@ public class FilmDAOImplementation implements FilmDAO{
 
     }
 
-}

@@ -124,9 +124,14 @@ public class Film {
     public List<Director> writers;
     public int year;
 
-    public Film(String title, int year){
+    public Film(String idIMDB, String title, String plot, int year){
+        this.idIMDB = idIMDB;
         this.title = title;
+        this.plot = plot;
         this.year = year;
+    }
+
+    public Film(){
     }
 
     public List<Actor> getActors() {

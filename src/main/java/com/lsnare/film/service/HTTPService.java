@@ -40,6 +40,22 @@ public class HTTPService {
 
     }
 
+    public static Film searchTest(String filmTitle){
+        try{
+
+            ApplicationContext context =
+                    new ClassPathXmlApplicationContext("Spring-Module.xml");
+            FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
+            Film film = filmDAO.selectFilms(filmTitle);
+            return film;
+        } catch(Exception e){
+            System.out.println(e.getMessage());
+        }
+
+        return null;
+
+    }
+
     private static String sendGet(String url) throws Exception {
 
         URL obj = new URL(url);
