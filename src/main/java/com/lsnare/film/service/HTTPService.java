@@ -41,19 +41,20 @@ public class HTTPService {
     }
 
     public static Film searchTest(String filmTitle){
+        Film film = new Film();
         try{
 
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("Spring-Module.xml");
             FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
-            Film film = filmDAO.selectFilms(filmTitle);
-            return film;
+            film = filmDAO.selectFilms(filmTitle);
+            System.out.println("searchTest: " + film.getTitle() + " " + film.getIdIMDB() + " " + film.getYear() + " " + film.getPlot());
+
         } catch(Exception e){
-            System.out.println(e.getMessage());
+            System.out.println("HTTP error: " + e);
         }
-
-        return null;
-
+        System.out.println("searchTest before return: " + film.getTitle() + " " + film.getIdIMDB() + " " + film.getYear() + " " + film.getPlot());
+        return film;
     }
 
     private static String sendGet(String url) throws Exception {

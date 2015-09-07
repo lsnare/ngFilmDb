@@ -79,17 +79,23 @@ public class Main {
         String filmTitle = request.queryParams("filmTitleSearch");
         System.out.println("param: " + filmTitle);
         try {
+            System.out.println("In try block in main");
+            filmTitle = filmTitle.replace('+', ' ');
             filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
+            System.out.println("In try block in main after decode: " + filmTitle);
             result = HTTPService.searchTest(filmTitle);
-            System.out.println("Result: " + result);
+            System.out.println("Result: " + result.getTitle() + " " + result.getIdIMDB() + " " + result.getYear() + " " + result.getPlot());
             attributes.put("idIMDB", result.getIdIMDB());
             attributes.put("title", result.getTitle());
             attributes.put("plot", result.getPlot());
-            attributes.put("year", result.getYear());
+            Integer year = new Integer(result.getYear());
+            System.out.println("Year: " + year);
+            attributes.put("year", year);
+            System.out.println("After attributes");
         } catch (Exception e) {
-            attributes.put("message", e.getMessage());
+            System.out.println("Web error: " + e);
         } finally {
-            attributes.put("message", "good");
+            //attributes.put("message", "good");
         }
 
         return new ModelAndView(attributes, "searchFilm.ftl");

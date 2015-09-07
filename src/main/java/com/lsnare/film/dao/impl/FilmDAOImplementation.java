@@ -126,22 +126,25 @@ public class FilmDAOImplementation implements FilmDAO{
     public Film selectFilms(String filmTitle) {
         String sql = "SELECT * FROM film WHERE title = ?";
         Connection conn = null;
+        Film film = new Film();
         try {
             System.out.println("Before connection");
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, filmTitle);
+            System.out.println("SQL film title: " + filmTitle);
+            System.out.println("PS: " + ps.toString());
             ResultSet rs = ps.executeQuery();
-            Film film = new Film();
+            System.out.println("RS: " + rs);
             while (rs.next()) {
+                System.out.println("in loop: " + rs.getString("title"));
                 film.setIdIMDB(rs.getString("idIMDB"));
                 film.setTitle(rs.getString("title"));
                 film.setPlot(rs.getString("plot"));
                 film.setYear(rs.getInt("year"));
             }
-            System.out.println("Film from db: " + film.toString());
+            System.out.println("Film from db: " + film.getTitle());
             ps.close();
-            return film;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -149,10 +152,11 @@ public class FilmDAOImplementation implements FilmDAO{
                 try {
                     conn.close();
                 } catch (SQLException e) {
+                    System.out.println("error dao: " + e.getMessage());
                 }
             }
         }
-        return null;
+        return film;
     }
 
 
