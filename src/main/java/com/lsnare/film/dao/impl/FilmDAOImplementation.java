@@ -139,6 +139,7 @@ public class FilmDAOImplementation implements FilmDAO{
                 film.setPlot(rs.getString("plot"));
                 film.setYear(rs.getInt("year"));
             }
+            System.out.println("Film from db: " + film.toString());
             ps.close();
             return film;
         } catch (Exception e) {
