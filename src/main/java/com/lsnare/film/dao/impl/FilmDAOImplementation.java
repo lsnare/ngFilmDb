@@ -132,10 +132,13 @@ public class FilmDAOImplementation implements FilmDAO{
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, filmTitle);
             ResultSet rs = ps.executeQuery();
+            Film film = new Film();
             while (rs.next()) {
-
+                film.setIdIMDB(rs.getString("idIMDB"));
+                film.setTitle(rs.getString("title"));
+                film.setPlot(rs.getString("plot"));
+                film.setYear(rs.getInt("year"));
             }
-            Film film = new Film(rs.getString("idIMDB"), rs.getString("title"), rs.getString("plot"), rs.getInt("year"));
             ps.close();
             return film;
         } catch (Exception e) {
