@@ -13,6 +13,9 @@
         <td>IMDB ID</td> <td>Title</td> <td>Year</td> <td>Plot</td>
     </th>
     <tr>
-        <td>${idIMDB}</td> <td>${title}</td> <td>${year}</td> <td>${plot}</td>
+        <#if idIMDB??><td>${idIMDB}</td></#if>
+        <#if title??><td>${title}</td></#if>
+        <#if year??><td>${year}</td></#if>
+        <#if plot??><td>${plot}</td></#if>
     </tr>
 </table>
