@@ -6,7 +6,7 @@
     </form>
 
     <#if searchResultsHeader??><td>${searchResultsHeader}</td></#if>
-    <table>
+    <table border=1>
         <tr>
             <th>
                 <td>IMDB ID</td> <td>Title</td> <td>Year</td> <td>Plot</td>
