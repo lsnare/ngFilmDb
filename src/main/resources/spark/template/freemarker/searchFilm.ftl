@@ -5,11 +5,13 @@
         <input type="text" name="filmTitleSearch"/> <input type="submit" name="add" value="Search for a Film" />
     </form>
 
-    <h2>Search Results</h2>
+    <#if searchResultsHeader??><td>${searchResultsHeader}</td></#if>
     <table>
-        <th>
-        <td>IMDB ID</td> <td>Title</td> <td>Year</td> <td>Plot</td>
-        </th>
+        <tr>
+            <th>
+                <td>IMDB ID</td> <td>Title</td> <td>Year</td> <td>Plot</td>
+            </th>
+        </tr>
         <tr>
             <#if idIMDB??><td>${idIMDB}</td></#if>
             <#if title??><td>${title}</td></#if>

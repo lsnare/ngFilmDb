@@ -20,12 +20,8 @@ public class HTTPService {
     public static String postTest(String filmTitle){
         try{
             String res = sendGet("http://www.myapifilms.com/imdb?title=" + filmTitle +"&format=JSON&lang=en-us&actors=S");
-
             Gson gson = new GsonBuilder().create();
             Film film = gson.fromJson(res.substring(1, res.length()-1), Film.class);
-
-            System.out.print(film.toString());
-
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("Spring-Module.xml");
             FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
@@ -36,24 +32,20 @@ public class HTTPService {
             return e.getMessage();
         }
 
-        return "Film added to the database successfully!";
+        return "<b>Film added to the database successfully!</b>";
 
     }
 
     public static Film searchTest(String filmTitle){
         Film film = new Film();
         try{
-
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("Spring-Module.xml");
             FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
             film = filmDAO.selectFilms(filmTitle);
-            System.out.println("searchTest: " + film.getTitle() + " " + film.getIdIMDB() + " " + film.getYear() + " " + film.getPlot());
-
         } catch(Exception e){
-            System.out.println("HTTP error: " + e);
+            System.out.println("HTTPService error: " + e);
         }
-        System.out.println("searchTest before return: " + film.getTitle() + " " + film.getIdIMDB() + " " + film.getYear() + " " + film.getPlot());
         return film;
     }
 

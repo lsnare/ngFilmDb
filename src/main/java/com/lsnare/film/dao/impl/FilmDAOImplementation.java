@@ -99,7 +99,6 @@ public class FilmDAOImplementation implements FilmDAO{
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
         Connection conn = null;
         try {
-            System.out.println("Before connection");
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, film.getIdIMDB());
@@ -110,7 +109,6 @@ public class FilmDAOImplementation implements FilmDAO{
             insertActors(conn);
             insertDirectors(conn);
             ps.close();
-            System.out.println("Success");
         } catch (Exception e) {
             System.out.println(e.getMessage());
         } finally {
@@ -128,25 +126,19 @@ public class FilmDAOImplementation implements FilmDAO{
         Connection conn = null;
         Film film = new Film();
         try {
-            System.out.println("Before connection");
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, filmTitle);
-            System.out.println("SQL film title: " + filmTitle);
-            System.out.println("PS: " + ps.toString());
             ResultSet rs = ps.executeQuery();
-            System.out.println("RS: " + rs);
             while (rs.next()) {
-                System.out.println("in loop: " + rs.getString("title"));
                 film.setIdIMDB(rs.getString("idIMDB"));
                 film.setTitle(rs.getString("title"));
                 film.setPlot(rs.getString("plot"));
                 film.setYear(rs.getInt("year"));
             }
-            System.out.println("Film from db: " + film.getTitle());
             ps.close();
         } catch (Exception e) {
-            System.out.println(e.getMessage());
+            System.out.println("Film select error: " + e);
         } finally {
             if (conn != null) {
                 try {
