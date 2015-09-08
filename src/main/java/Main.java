@@ -7,6 +7,7 @@ import java.util.Map;
 import static spark.Spark.*;
 import com.lsnare.film.model.Film;
 import com.lsnare.film.service.HTTPService;
+import com.lsnare.film.util.FilmUtils;
 import spark.template.freemarker.FreeMarkerEngine;
 import spark.ModelAndView;
 import static spark.Spark.get;
@@ -37,7 +38,7 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           String filmTitle = request.queryParams("filmTitle");
           try {
               filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
-              result = HTTPService.postTest(filmTitle);
+              result = FilmUtils.postTest(filmTitle);
           } catch (Exception e) {
               attributes.put("message", e.getMessage());
           } finally {
@@ -58,7 +59,7 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           String filmTitle = request.queryParams("filmTitleSearch");
           try {
               filmTitle = URLDecoder.decode(filmTitle, "UTF-8");
-              result = HTTPService.searchTest(filmTitle);
+              result = FilmUtils.searchTest(filmTitle);
               attributes.put("idIMDB", result.getIdIMDB());
               attributes.put("title", result.getTitle());
               attributes.put("plot", result.getPlot());
