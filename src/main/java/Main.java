@@ -3,6 +3,7 @@ import java.net.URLEncoder;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import static spark.Spark.*;
 import com.lsnare.film.model.Film;
@@ -55,44 +56,46 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
       //Search for a film in the database
       post("/search", (request, response) -> {
           Map<String, Object> attributes = new HashMap<>();
-          Film result = new Film();
+          List<Film> results = new ArrayList<>();
           String filmTitle = request.queryParams("filmTitleSearch");
           try {
               filmTitle = URLDecoder.decode(filmTitle, "UTF-8");
-              result = FilmUtils.searchTest(filmTitle);
-              attributes.put("idIMDB", result.getIdIMDB());
-              attributes.put("title", result.getTitle());
-              attributes.put("plot", result.getPlot());
-              attributes.put("year", result.getYear());
+              results = FilmUtils.searchTest(filmTitle);
           } catch (Exception e) {
               System.out.println("Error on search: " + e);
           } finally {
               attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
           }
+          for (Film result : results){
+              attributes.put("idIMDB", "<tr><td>" + result.getIdIMDB() + "</td>");
+              attributes.put("title", "<td>" + result.getTitle() + "</td>");
+              attributes.put("year", "<td>" + result.getYear() + "</td>");
+              attributes.put("plot", "<td>" + result.getPlot() + "</td></tr>");
+          }
           return new ModelAndView(attributes, "searchFilm.ftl");
       }, new FreeMarkerEngine());
 
-      get("/db", (req, res) -> {
-          Connection connection = null;
-          Map<String, Object> attributes = new HashMap<>();
-          try {
-              connection = DatabaseUrl.extract().getConnection();
+        get("/db", (req, res) -> {
+            Connection connection = null;
+            Map<String, Object> attributes = new HashMap<>();
+            try {
+                connection = DatabaseUrl.extract().getConnection();
 
-              Statement stmt = connection.createStatement();
-              stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-              stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-              ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
+                Statement stmt = connection.createStatement();
+                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
+                stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
+                ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
 
-              ArrayList<String> output = new ArrayList<String>();
-              while (rs.next()) {
-                  output.add("Read from DB: " + rs.getTimestamp("tick"));
-              }
+                ArrayList<String> output = new ArrayList<String>();
+                while (rs.next()) {
+                    output.add("Read from DB: " + rs.getTimestamp("tick"));
+                }
 
-              attributes.put("results", output);
-              return new ModelAndView(attributes, "db.ftl");
-          } catch (Exception e) {
-              attributes.put("message", "There was an error: " + e);
-              return new ModelAndView(attributes, "error.ftl");
+                attributes.put("results", output);
+                return new ModelAndView(attributes, "db.ftl");
+            } catch (Exception e) {
+                attributes.put("message", "There was an error: " + e);
+                return new ModelAndView(attributes, "error.ftl");
           } finally {
               if (connection != null) try {
                   connection.close();

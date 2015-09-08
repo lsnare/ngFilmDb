@@ -5,6 +5,7 @@ import com.lsnare.film.model.Film;
 
 import javax.sql.DataSource;
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -121,20 +122,22 @@ public class FilmDAOImplementation implements FilmDAO{
         }
     }
 
-    public Film selectFilms(String filmTitle) {
-        String sql = "SELECT * FROM film WHERE title = ?";
+    public List<Film> selectFilms(String filmTitle) {
+        String sql = "SELECT * FROM film WHERE title LIKE ?";
         Connection conn = null;
-        Film film = new Film();
+        List<Film> films = new ArrayList<>();
         try {
             conn = dataSource.getConnection();
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, filmTitle);
+            ps.setString(1, "%" + filmTitle + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
+                Film film = new Film();
                 film.setIdIMDB(rs.getString("idIMDB"));
                 film.setTitle(rs.getString("title"));
                 film.setPlot(rs.getString("plot"));
                 film.setYear(rs.getInt("year"));
+                films.add(film);
             }
             ps.close();
         } catch (Exception e) {
@@ -148,7 +151,7 @@ public class FilmDAOImplementation implements FilmDAO{
                 }
             }
         }
-        return film;
+        return films;
     }
 
 

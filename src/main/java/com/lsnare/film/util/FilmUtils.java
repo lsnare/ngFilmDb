@@ -8,6 +8,9 @@ import com.lsnare.film.service.HTTPService;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by lucian on 9/8/15.
  */
@@ -32,17 +35,17 @@ public class FilmUtils {
 
     }
 
-    public static Film searchTest(String filmTitle){
-        Film film = new Film();
+    public static List<Film> searchTest(String filmTitle){
+        List<Film> films = new ArrayList<>();
         try{
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("Spring-Module.xml");
             FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
-            film = filmDAO.selectFilms(filmTitle);
+            films = filmDAO.selectFilms(filmTitle);
         } catch(Exception e){
             System.out.println("HTTPService error: " + e);
         }
-        return film;
+        return films;
     }
 
 }
