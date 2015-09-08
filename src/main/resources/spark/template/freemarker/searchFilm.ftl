@@ -8,9 +8,7 @@
     <#if searchResultsHeader??><td>${searchResultsHeader}</td></#if>
     <table border=1>
         <tr>
-            <th>
-                <td>IMDB ID</td> <td>Title</td> <td>Year</td> <td>Plot</td>
-            </th>
+            <td>IMDB ID</td> <td>Title</td> <td>Year</td> <td>Plot</td>
         </tr>
         <tr>
             <#if idIMDB??><td>${idIMDB}</td></#if>
