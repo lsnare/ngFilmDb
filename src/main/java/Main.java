@@ -71,12 +71,14 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           } finally {
               attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
           }
+          String filmData = "";
           for (Film result : results){
-              attributes.put("idIMDB", "<tr><td>" + result.getIdIMDB() + "</td>");
-              attributes.put("title", "<td>" + result.getTitle() + "</td>");
-              attributes.put("year", "<td>" + result.getYear() + "</td>");
-              attributes.put("plot", "<td>" + result.getPlot() + "</td></tr>");
+              filmData += "<tr><td>" + result.getIdIMDB() + "</td>"
+                      + "<td>" + result.getTitle() + "</td>"
+                      + "<td>" + result.getYear() + "</td>"
+                      + "<td>" + result.getPlot() + "</td></tr>";
           }
+          attributes.put("filmData", filmData);
           return new ModelAndView(attributes, "searchFilm.ftl");
       }, new FreeMarkerEngine());
 

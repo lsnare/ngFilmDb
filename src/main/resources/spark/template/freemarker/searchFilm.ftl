@@ -14,12 +14,7 @@
                     <th>Year</th>
                     <th>Plot</th>
                 </tr>
-                <tr>
-                    <#if idIMDB??>${idIMDB}</#if>
-                    <#if title??>${title}</#if>
-                    <#if year??>${year}</#if>
-                    <#if plot??>${plot}</#if>
-                </tr>
+                <#if filmData??>${filmData}</#if>
             </table>
         </#if>
     </body>
