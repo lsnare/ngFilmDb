@@ -5,6 +5,8 @@ import com.google.gson.GsonBuilder;
 import com.lsnare.film.dao.FilmDAO;
 import com.lsnare.film.model.Film;
 import com.lsnare.film.service.HTTPService;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
@@ -15,6 +17,8 @@ import java.util.List;
  * Created by lucian on 9/8/15.
  */
 public class FilmUtils {
+
+    static Log log = LogFactory.getLog(FilmUtils.class);
 
     public static String postTest(String filmTitle){
         try{
@@ -42,6 +46,7 @@ public class FilmUtils {
                     new ClassPathXmlApplicationContext("Spring-Module.xml");
             FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
             films = filmDAO.selectFilms(filmTitle);
+            log.info("Found " + films.size() + " films when searching");
         } catch(Exception e){
             System.out.println("HTTPService error: " + e);
         }

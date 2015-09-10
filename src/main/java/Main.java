@@ -9,12 +9,16 @@ import static spark.Spark.*;
 import com.lsnare.film.model.Film;
 import com.lsnare.film.service.HTTPService;
 import com.lsnare.film.util.FilmUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import spark.template.freemarker.FreeMarkerEngine;
 import spark.ModelAndView;
 import static spark.Spark.get;
 import com.heroku.sdk.jdbc.DatabaseUrl;
 
   public class Main {
+
+      static Log log = LogFactory.getLog(Main.class);
 
     public static void main(String[] args) {
       port(Integer.valueOf(System.getenv("PORT")));
@@ -61,6 +65,7 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           try {
               filmTitle = URLDecoder.decode(filmTitle, "UTF-8");
               results = FilmUtils.searchTest(filmTitle);
+              log.info("Adding " + results.size() + " results to the page");
           } catch (Exception e) {
               System.out.println("Error on search: " + e);
           } finally {
