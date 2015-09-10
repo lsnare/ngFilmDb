@@ -130,7 +130,7 @@ public class FilmDAOImplementation implements FilmDAO{
     }
 
     public List<Film> selectFilms(String filmTitle) {
-        String sql = "SELECT * FROM film WHERE title LIKE ?";
+        String sql = "SELECT * FROM film WHERE UPPER(title) LIKE UPPER(?)";
         Connection conn = null;
         List<Film> films = new ArrayList<>();
         try {
