@@ -2,6 +2,8 @@ package com.lsnare.film.dao.impl;
 
 import com.lsnare.film.dao.FilmDAO;
 import com.lsnare.film.model.Film;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
 import javax.sql.DataSource;
 import java.sql.*;
@@ -16,6 +18,7 @@ public class FilmDAOImplementation implements FilmDAO{
     String error = "";
     private DataSource dataSource;
     private Film film;
+    Log log = LogFactory.getLog(FilmDAOImplementation.class);
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -32,7 +35,7 @@ public class FilmDAOImplementation implements FilmDAO{
                 psActor.setString(2, a.getActorName());
                 psActor.execute();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                log.info(e.getMessage());
             } finally {
                 //if an actor already exists, we still need to create an actor film role link
                 try {
@@ -42,10 +45,11 @@ public class FilmDAOImplementation implements FilmDAO{
                     psActorFilmRole.setString(3, a.getCharacter());
                     psActorFilmRole.execute();
                 } catch (Exception e) {
-                    error += "\n" + e.getMessage();
+                    log.error(e.getMessage());
                 }
             }
         }
+        log.info("Finished inserting actors");
     }
 
     public void insertDirectors(Connection conn){
@@ -58,7 +62,7 @@ public class FilmDAOImplementation implements FilmDAO{
                 psDirector.setString(2, d.getName());
                 psDirector.execute();
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
+                log.info(e.getMessage());
             } finally {
                 try {
                     PreparedStatement psDirectorFilmAssignment = conn.prepareStatement(sqlDirectorFilmAssignment);
@@ -66,10 +70,11 @@ public class FilmDAOImplementation implements FilmDAO{
                     psDirectorFilmAssignment.setString(2, this.film.getIdIMDB());
                     psDirectorFilmAssignment.execute();
                 } catch (Exception e){
-                    System.out.println(e.getMessage());
+                    log.error(e.getMessage());
                 }
             }
         }
+        log.info("Finished inserting directors");
     }
 
     public void insertGenres(Connection conn){
@@ -101,12 +106,14 @@ public class FilmDAOImplementation implements FilmDAO{
         Connection conn = null;
         try {
             conn = dataSource.getConnection();
+            log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, film.getIdIMDB());
             ps.setString(2, film.getTitle());
             ps.setString(3, film.getPlot());
             ps.setInt(4, film.getYear());
             ps.execute();
+            log.info("Inserted film");
             insertActors(conn);
             insertDirectors(conn);
             ps.close();
@@ -128,6 +135,7 @@ public class FilmDAOImplementation implements FilmDAO{
         List<Film> films = new ArrayList<>();
         try {
             conn = dataSource.getConnection();
+            log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + filmTitle + "%");
             ResultSet rs = ps.executeQuery();
@@ -137,17 +145,20 @@ public class FilmDAOImplementation implements FilmDAO{
                 film.setTitle(rs.getString("title"));
                 film.setPlot(rs.getString("plot"));
                 film.setYear(rs.getInt("year"));
+                log.info("Adding " + film.getTitle() + " to results");
                 films.add(film);
             }
+            log.info("Search complete");
+            log.debug("Found " + films.size() + " films related to the search for titles similar to " + filmTitle);
             ps.close();
         } catch (Exception e) {
-            System.out.println("Film select error: " + e);
+            log.error("Film select error: " + e);
         } finally {
             if (conn != null) {
                 try {
                     conn.close();
                 } catch (SQLException e) {
-                    System.out.println("error dao: " + e.getMessage());
+                    log.error("error dao: " + e.getMessage());
                 }
             }
         }
