@@ -10,6 +10,7 @@
         line-height: 50px;
         text-align: left;
         color: #2D383A; /* Outer Space */
+        font-weight: bold;
         border-style: solid;
         border-width: 2px;
         border-color: #2D383A; /* Outer Space */
@@ -28,7 +29,8 @@
     }
     ul li ul.dropdown{
         min-width: 250px;
-        background: #00755E;
+        background: #00755E; /* Tropical Rain Forest */
+        font-weight: bold;
         display: none;
         position: absolute;
         z-index: 999;
@@ -55,4 +57,6 @@
         cursor:pointer;
         -webkit-border-radius: 5px;
         border-radius: 5px;
+        background: #00755E; /* Tropical Rain Forest */
+        font-weight: bold;
     }
