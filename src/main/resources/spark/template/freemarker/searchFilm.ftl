@@ -17,5 +17,7 @@
                 <#if filmData??>${filmData}</#if>
             </table>
         </#if>
+
+        <#if error??>${error}</#if>
     </body>
 </html>

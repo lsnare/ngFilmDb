@@ -59,26 +59,18 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
 
       //Search for a film in the database
       post("/search", (request, response) -> {
-          Map<String, Object> attributes = new HashMap<>();
           List<Film> results = new ArrayList<>();
+          Map<String, Object> attributes = new HashMap();
           String filmTitle = request.queryParams("filmTitleSearch");
           try {
               filmTitle = URLDecoder.decode(filmTitle, "UTF-8");
               results = FilmUtils.searchTest(filmTitle);
+              attributes = FilmUtils.buildFilmSearchResults(results);
               log.info("Adding " + results.size() + " results to the page");
           } catch (Exception e) {
               System.out.println("Error on search: " + e);
-          } finally {
-              attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
+              attributes.put("error", e);
           }
-          String filmData = "";
-          for (Film result : results){
-              filmData += "<tr><td>" + result.getIdIMDB() + "</td>"
-                      + "<td>" + result.getTitle() + "</td>"
-                      + "<td>" + result.getYear() + "</td>"
-                      + "<td>" + result.getPlot() + "</td></tr>";
-          }
-          attributes.put("filmData", filmData);
           return new ModelAndView(attributes, "searchFilm.ftl");
       }, new FreeMarkerEngine());
 

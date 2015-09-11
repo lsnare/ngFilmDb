@@ -11,7 +11,9 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lucian on 9/8/15.
@@ -51,6 +53,23 @@ public class FilmUtils {
             System.out.println("HTTPService error: " + e);
         }
         return films;
+    }
+
+    public static Map<String, Object> buildFilmSearchResults(List<Film> films){
+        String filmData = "";
+        Map<String, Object> attributes = new HashMap();
+
+        attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
+
+        for (Film film : films){
+            filmData += "<tr><td>" + film.getIdIMDB() + "</td>"
+                    + "<td>" + film.getTitle() + "</td>"
+                    + "<td>" + film.getYear() + "</td>"
+                    + "<td>" + film.getPlot() + "</td></tr>";
+        }
+        attributes.put("filmData", filmData);
+
+        return attributes;
     }
 
 }
