@@ -7,7 +7,7 @@
         <ul>
             <li><a href="add">Add a Film to the Database</a></li>
             <li>
-                Search the Database
+                <a> Search the Database </a>
                 <ul class="dropdown">
                     <li><a href="search">Search Films</a></li>
                     <li><a href="searchActor">Search Roles for an Actor</a></li>
