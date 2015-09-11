@@ -13,6 +13,10 @@ public class Film {
         public String urlPhoto;
         public String urlProfile;
 
+        public Actor(){
+
+        }
+
         public String getActorId() {
             return actorId;
         }
@@ -122,9 +126,9 @@ public class Film {
     public String urlPoster;
     public String votes;
     public List<Director> writers;
-    public int year;
+    public String year;
 
-    public Film(String idIMDB, String title, String plot, int year){
+    public Film(String idIMDB, String title, String plot, String year){
         this.idIMDB = idIMDB;
         this.title = title;
         this.plot = plot;
@@ -302,11 +306,11 @@ public class Film {
         this.writers = writers;
     }
 
-    public int getYear() {
+    public String getYear() {
         return year;
     }
 
-    public void setYear(int year) {
+    public void setYear(String year) {
         this.year = year;
     }
 

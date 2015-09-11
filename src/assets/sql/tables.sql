@@ -1,13 +1,21 @@
+DROP TABLE actor_film_role;
+DROP TABLE director_film_assignment;
+DROP TABLE film_genre;
+DROP TABLE actor;
+DROP TABLE director;
+DROP TABLE genre;
+DROP TABLE film;
+
 CREATE TABLE actor (
 actorId VARCHAR(25) PRIMARY KEY NOT NULL,
-actorName VARCHAR(75) NOT NULL,
+actorName VARCHAR(75) NOT NULL
 );
 
 CREATE TABLE film (
 idIMDB VARCHAR(25) PRIMARY KEY NOT NULL,
 title VARCHAR(75) NOT NULL,
 plot TEXT,
-year INT
+year CHAR(4)
 ); 
 
 CREATE TABLE actor_film_role(
