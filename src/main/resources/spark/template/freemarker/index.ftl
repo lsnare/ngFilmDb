@@ -2,7 +2,7 @@
     <head>
         <link rel="stylesheet" type="text/css" href="/stylesheets/film.css" />
     </head>
-    <body bgcolor="#5FA777">
+    <body bgcolor="#7BA05B"> <!-- Asparagus -->
         <h1 class="text">Welcome to MyFilmDB</h1>
         <ul>
             <li><a href="add">Add a Film to the Database</a></li>

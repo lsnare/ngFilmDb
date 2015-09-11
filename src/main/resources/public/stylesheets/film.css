@@ -1,27 +1,29 @@
+/* CSS for creating a dropdown menu */
     ul{
         padding: 0;
         list-style: none;
-        background: #7BA05B;
+        background: #7BA05B; /* Asparagus */
     }
     ul li{
         display: inline-block;
         position: relative;
         line-height: 50px;
         text-align: left;
+        color: #2D383A; /* Outer Space */
     }
     ul li a{
         display: block;
         padding: 8px 25px;
-        color: #333;
+        color: #2D383A; /* Outer Space */
         text-decoration: none;
     }
     ul li a:hover{
         color: #fff;
-        background: #5E8C31;
+        background: #00755E; /* Tropical Rain Forest */
     }
     ul li ul.dropdown{
         min-width: 200px;
-        background: #f2f2f2;
+        background: #00755E;
         display: none;
         position: absolute;
         z-index: 999;
@@ -33,9 +35,12 @@
     ul li ul.dropdown li{
         display: block;
     }
-    .text {
-        color:#00755E;
+
+    h3, h1 {
+        color: #2D383A; /* Outer Space */
     }
+
+    /* Styling for HTML form */
     input[type=submit] {
         padding:5px 15px; background:#ccc; border:0 none;
         cursor:pointer;

@@ -4,7 +4,7 @@
         <form action = "/search" method = "post">
             <input type="text" name="filmTitleSearch"/> <input type="submit" name="add" value="Search for a Film" />
         </form>
-        
+
         <#if searchResultsHeader??>
             ${searchResultsHeader}
             <table border=1>
