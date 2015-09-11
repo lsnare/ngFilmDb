@@ -113,7 +113,7 @@ public class FilmDAOImplementation implements FilmDAO{
             ps.setString(1, film.getIdIMDB());
             ps.setString(2, film.getTitle());
             ps.setString(3, film.getPlot());
-            ps.setInt(4, film.getYear());
+            ps.setString(4, film.getYear());
             ps.execute();
             log.info("Inserted film");
             insertActors(conn);
@@ -146,7 +146,7 @@ public class FilmDAOImplementation implements FilmDAO{
                 film.setIdIMDB(rs.getString("idIMDB"));
                 film.setTitle(rs.getString("title"));
                 film.setPlot(rs.getString("plot"));
-                film.setYear(rs.getInt("year"));
+                film.setYear(rs.getString("year"));
                 log.info("Adding " + film.getTitle() + " to results");
                 films.add(film);
             }
