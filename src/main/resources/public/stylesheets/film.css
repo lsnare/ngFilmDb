@@ -2,7 +2,7 @@
     ul{
         padding: 0;
         list-style: none;
-        background: #7BA05B; /* Asparagus */
+        background: #00755E; /* Tropical Rain Forest */
     }
     ul li{
         display: inline-block;
@@ -19,7 +19,7 @@
     }
     ul li a:hover{
         color: #fff;
-        background: #00755E; /* Tropical Rain Forest */
+        background: #2D383A; /* Maximum Green */
     }
     ul li ul.dropdown{
         min-width: 200px;
@@ -36,7 +36,11 @@
         display: block;
     }
 
-    h3, h1 {
+    h1 {
+            color: #2D383A; /* Outer Space */
+        }
+
+    h3 {
         color: #2D383A; /* Outer Space */
     }
 
