@@ -17,7 +17,7 @@
 
     ul li a{
         display: block;
-        padding: 8px 25px;
+        padding: 0px 25px;
         color: #2D383A; /* Outer Space */
         text-decoration: none;
     }
