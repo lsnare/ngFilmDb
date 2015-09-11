@@ -23,7 +23,7 @@
         text-decoration: none;
     }
     ul li a:hover{
-        color: #fff;
+        color: #7BA05B  /* Asparagus */
         background: #2D383A; /* Outer Space */
         border-color: #00755E; /* Tropical Rain Forest */
     }
@@ -59,4 +59,9 @@
         border-radius: 5px;
         background: #00755E; /* Tropical Rain Forest */
         font-weight: bold;
+    }
+
+    th {
+        background: #00755E; /* Tropical Rain Forest */
+        color: #7BA05B  /* Asparagus */
     }
