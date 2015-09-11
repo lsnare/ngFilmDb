@@ -93,8 +93,7 @@ public class FilmUtils {
         attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
         actorData += "<ul><li>" + actorName + "</li>";
         for (String role : roles.keySet()){
-            actorData += "<ul><li>" + role + "</li>"
-                    + "<li>" + roles.get(role) + "</li></ul>";
+            actorData += "<ul><li>" + role + "&nbsp <i>" + roles.get(role) + "</i></li>";
         }
         actorData += "</ul>";
         attributes.put("actorData", actorData);

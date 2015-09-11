@@ -168,9 +168,10 @@ public class FilmDAOImplementation implements FilmDAO{
     }
 
     public Map<String, String> selectRolesForActor(String actorName) {
-        String sql = "SELECT r.role, f.title from actor a"
-                    + "INNER JOIN actor_film_role r on r.actorId = a.actorId"
-                    + "INNER JOIN film f on f.idIMDB = r.idIMDB"
+        String sql = "SELECT r.role, f.title "
+                    + "FROM actor a "
+                    + "INNER JOIN actor_film_role r on r.actorId = a.actorId "
+                    + "INNER JOIN film f on f.idIMDB = r.idIMDB "
                     + "WHERE UPPER(a.actorName) LIKE UPPER(?)";
         Map<String, String> roles = new HashMap();
         Connection conn = null;
@@ -180,6 +181,7 @@ public class FilmDAOImplementation implements FilmDAO{
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + actorName + "%");
+            log.info("Searching for " + actorName + " in database");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 roles.put(rs.getString("role"), rs.getString("title"));
@@ -189,6 +191,7 @@ public class FilmDAOImplementation implements FilmDAO{
             ps.close();
         } catch (Exception e) {
             log.error("Film select error: " + e);
+            log.error("Specific error: " + e.getMessage());
         } finally {
             if (conn != null) {
                 try {
