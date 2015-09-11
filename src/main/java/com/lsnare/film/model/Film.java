@@ -13,6 +13,10 @@ public class Film {
         public String urlPhoto;
         public String urlProfile;
 
+        public Actor(){
+
+        }
+
         public String getActorId() {
             return actorId;
         }

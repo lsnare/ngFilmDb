@@ -22,7 +22,7 @@ public class FilmUtils {
 
     static Log log = LogFactory.getLog(FilmUtils.class);
 
-    public static String postTest(String filmTitle){
+    public static String addFilmToDatabase(String filmTitle){
         try{
             String res = HTTPService.sendGet("http://www.myapifilms.com/imdb?title=" + filmTitle + "&format=JSON&lang=en-us&actors=S");
             Gson gson = new GsonBuilder().create();
@@ -41,13 +41,13 @@ public class FilmUtils {
 
     }
 
-    public static List<Film> searchTest(String filmTitle){
+    public static List<Film> searchFilmByTitle(String filmTitle){
         List<Film> films = new ArrayList<>();
         try{
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("Spring-Module.xml");
             FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
-            films = filmDAO.selectFilms(filmTitle);
+            films = filmDAO.selectFilmsByTitle(filmTitle);
             log.info("Found " + films.size() + " films when searching");
         } catch(Exception e){
             System.out.println("HTTPService error: " + e);
@@ -68,6 +68,36 @@ public class FilmUtils {
                     + "<td>" + film.getPlot() + "</td></tr>";
         }
         attributes.put("filmData", filmData);
+
+        return attributes;
+    }
+
+    public static Map<String, String> searchRolesForActorByName(String actorName){
+        Map<String, String> rolesForActor = new HashMap();
+        try{
+            ApplicationContext context =
+                    new ClassPathXmlApplicationContext("Spring-Module.xml");
+            FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
+            rolesForActor = filmDAO.selectRolesForActor(actorName);
+            log.info("Found " + rolesForActor.size() + " roles when searching");
+        } catch(Exception e){
+            System.out.println("HTTPService error: " + e);
+        }
+        return rolesForActor;
+    }
+
+    public static Map<String, Object> buildActorRolesSearchResults(String actorName, Map<String, String> roles){
+        String actorData = "";
+        Map<String, Object> attributes = new HashMap();
+
+        attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
+        actorData += "<ul><li>" + actorName + "</li>";
+        for (String role : roles.keySet()){
+            actorData += "<ul><li>" + role + "</li>"
+                    + "<li>" + roles.get(role) + "</li></ul>";
+        }
+        actorData += "</ul>";
+        attributes.put("actorData", actorData);
 
         return attributes;
     }

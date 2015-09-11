@@ -8,7 +8,9 @@ import org.apache.commons.logging.LogFactory;
 import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by lucian on 9/2/15.
@@ -129,7 +131,7 @@ public class FilmDAOImplementation implements FilmDAO{
         }
     }
 
-    public List<Film> selectFilms(String filmTitle) {
+    public List<Film> selectFilmsByTitle(String filmTitle) {
         String sql = "SELECT * FROM film WHERE UPPER(title) LIKE UPPER(?)";
         Connection conn = null;
         List<Film> films = new ArrayList<>();
@@ -163,6 +165,40 @@ public class FilmDAOImplementation implements FilmDAO{
             }
         }
         return films;
+    }
+
+    public Map<String, String> selectRolesForActor(String actorName) {
+        String sql = "SELECT r.role, f.title from actor a"
+                    + "INNER JOIN actor_film_role r on r.actorId = a.actorId"
+                    + "INNER JOIN film f on f.idIMDB = r.idIMDB"
+                    + "WHERE UPPER(a.actorName) LIKE UPPER(?)";
+        Map<String, String> roles = new HashMap();
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            log.info("Connection established");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + actorName + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                roles.put(rs.getString("role"), rs.getString("title"));
+            }
+            log.info("Search complete");
+            log.debug("Found " + roles.size() + " roles related to the search for actor " + actorName);
+            ps.close();
+        } catch (Exception e) {
+            log.error("Film select error: " + e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("error dao: " + e.getMessage());
+                }
+            }
+        }
+        return roles;
     }
 
 

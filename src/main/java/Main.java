@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 import static spark.Spark.*;
 import com.lsnare.film.model.Film;
-import com.lsnare.film.service.HTTPService;
 import com.lsnare.film.util.FilmUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -43,7 +42,7 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           String filmTitle = request.queryParams("filmTitle");
           try {
               filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
-              result = FilmUtils.postTest(filmTitle);
+              result = FilmUtils.addFilmToDatabase(filmTitle);
           } catch (Exception e) {
               attributes.put("message", e.getMessage());
           } finally {
@@ -64,7 +63,7 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           String filmTitle = request.queryParams("filmTitleSearch");
           try {
               filmTitle = URLDecoder.decode(filmTitle, "UTF-8");
-              results = FilmUtils.searchTest(filmTitle);
+              results = FilmUtils.searchFilmByTitle(filmTitle);
               attributes = FilmUtils.buildFilmSearchResults(results);
               log.info("Adding " + results.size() + " results to the page");
           } catch (Exception e) {
@@ -73,6 +72,28 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           }
           return new ModelAndView(attributes, "searchFilm.ftl");
       }, new FreeMarkerEngine());
+
+        get("/searchActor", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+            return new ModelAndView(attributes, "searchActor.ftl");
+        }, new FreeMarkerEngine());
+
+        //Search for a film in the database
+        post("/searchActor", (request, response) -> {
+            Map<String, String> results = new HashMap();
+            Map<String, Object> attributes = new HashMap();
+            String actorName = request.queryParams("actorNameSearch");
+            try {
+                actorName = URLDecoder.decode(actorName, "UTF-8");
+                results = FilmUtils.searchRolesForActorByName(actorName);
+                attributes = FilmUtils.buildActorRolesSearchResults(actorName, results);
+                log.info("Adding " + results.size() + " results to the page");
+            } catch (Exception e) {
+                System.out.println("Error on search: " + e);
+                attributes.put("error", e);
+            }
+            return new ModelAndView(attributes, "searchActor.ftl");
+        }, new FreeMarkerEngine());
 
         get("/db", (req, res) -> {
             Connection connection = null;
