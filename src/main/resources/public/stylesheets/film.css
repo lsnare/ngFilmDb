@@ -44,17 +44,13 @@
         display: block;
     }
 
-    h1 {
+    h1 a{
         color: #2D383A; /* Outer Space */
+        text-decoration: none;
     }
 
     h3 {
         color: #2D383A; /* Outer Space */
-    }
-
-    a href{
-        text-decoration: none;
-        color:  #2D383A; /* Outer Space */
     }
 
     /* Styling for HTML form */
