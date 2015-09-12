@@ -80,8 +80,8 @@ public class FilmUtils {
                 filmData += "<tr id = \"" + rowId + "\"><td>" + film.getIdIMDB() + "</td>"
                         + "<td>" + film.getTitle() + "</td>"
                         + "<td>" + film.getYear() + "</td>"
-                        + "<td" + shortPlot
-                            + "<a onclick=\"showLongPlot(\'" + rowId + ")\"> More </a>"+ "</td>"
+                        + "<td>" + shortPlot
+                            + "<a onclick=\"showLongPlot(\'" + rowId + ")\"> More </a>" + "</td>"
                         + "<td style=\"display: none;\">" + longPlot + "</td>"
                         + "</tr>";
 
