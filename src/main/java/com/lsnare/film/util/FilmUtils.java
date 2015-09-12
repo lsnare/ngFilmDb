@@ -75,16 +75,14 @@ public class FilmUtils {
                 //Get t";he first 25 words for the short plot
                 shortPlot = film.getPlot().split(" ", 25)[0] + "...";
                 longPlot = film.getPlot();
-                tdShort = "tdShort_" + count;
-                tdLong = "tdLong_" + count;
+                String rowId = "row_" + count;
 
-                filmData += "<tr><td>" + film.getIdIMDB() + "</td>"
+                filmData += "<tr id = \"" + rowId + "\"><td>" + film.getIdIMDB() + "</td>"
                         + "<td>" + film.getTitle() + "</td>"
                         + "<td>" + film.getYear() + "</td>"
-                        + "<td id=\"" + tdShort + "\">" + shortPlot
-                            + "<a onclick=\"showLongPlot(" + tdShort + ", "
-                            + tdLong + ")\"> More </a>"+ "</td>"
-                        + "<td id=\"" + tdLong + "\" style=\"display: none;\">" + longPlot + "</td>"
+                        + "<td" + shortPlot
+                            + "<a onclick=\"showLongPlot(\'" + rowId + ")\"> More </a>"+ "</td>"
+                        + "<td style=\"display: none;\">" + longPlot + "</td>"
                         + "</tr>";
 
                 count ++;
