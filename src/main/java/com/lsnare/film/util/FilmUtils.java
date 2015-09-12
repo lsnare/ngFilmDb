@@ -81,7 +81,7 @@ public class FilmUtils {
                         + "<td>" + film.getTitle() + "</td>"
                         + "<td>" + film.getYear() + "</td>"
                         + "<td>" + shortPlot
-                            + "<a onclick=\"showLongPlot(\'" + rowId + ")\"> More </a>" + "</td>"
+                            + "<a onclick=\"showLongPlot(\'" + rowId + "\')\"> More </a>" + "</td>"
                         + "<td style=\"display: none;\">" + longPlot + "</td>"
                         + "</tr>";
 
