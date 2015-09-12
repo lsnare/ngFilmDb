@@ -81,8 +81,8 @@ public class FilmUtils {
                         + "<td>" + film.getTitle() + "</td>"
                         + "<td>" + film.getYear() + "</td>"
                         + "<td>" + shortPlot
-                            + "<a onclick=\"showLongPlot(\'" + rowId + "\')\"> More </a>" + "</td>"
-                        + "<td style=\"display: none;\">" + longPlot + "</td>"
+                            + "<a href =\"#\" onclick=\"showLongPlot(\'" + rowId + "\')\"> More </a>" + "</td>"
+                        + "<td style=\"display: none;\">" + longPlot + "<a href=\"#\" onclick=\"showShortPlot(\'" + rowId + "\')\"> Less </a>" + "</td>"
                         + "</tr>";
 
                 count ++;
