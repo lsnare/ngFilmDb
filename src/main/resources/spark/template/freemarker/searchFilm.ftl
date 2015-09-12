@@ -7,15 +7,7 @@
 
         <#if searchResultsHeader??>
             ${searchResultsHeader}
-            <table border=1>
-                <tr>
-                    <th>IMDB ID</th>
-                    <th>Title</th>
-                    <th>Year</th>
-                    <th>Plot</th>
-                </tr>
-                <#if filmData??>${filmData}</#if>
-            </table>
+            <#if filmData??>${filmData}</#if>
         </#if>
 
         <#if error??>${error}</#if>

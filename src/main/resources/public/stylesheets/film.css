@@ -3,6 +3,7 @@
         padding: 0;
         list-style: none;
         background: #00755E; /* Tropical Rain Forest */
+        white-space: nowrap;
     }
     ul li{
         display: inline-block;

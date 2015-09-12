@@ -61,11 +61,18 @@ public class FilmUtils {
 
         attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
 
-        for (Film film : films){
-            filmData += "<tr><td>" + film.getIdIMDB() + "</td>"
-                    + "<td>" + film.getTitle() + "</td>"
-                    + "<td>" + film.getYear() + "</td>"
-                    + "<td>" + film.getPlot() + "</td></tr>";
+        if(films.size() > 0) {
+            filmData += "<table border=1> <tr>"
+                    + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> </tr> ";
+            for (Film film : films) {
+                filmData += "<tr><td>" + film.getIdIMDB() + "</td>"
+                        + "<td>" + film.getTitle() + "</td>"
+                        + "<td>" + film.getYear() + "</td>"
+                        + "<td>" + film.getPlot() + "</td></tr>";
+            }
+            filmData += "</table>";
+        } else {
+            filmData = "<b>No results found!</b>";
         }
         attributes.put("filmData", filmData);
 
