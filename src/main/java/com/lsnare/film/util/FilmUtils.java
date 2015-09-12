@@ -73,7 +73,7 @@ public class FilmUtils {
 
             for (Film film : films) {
                 //Get t";he first 25 words for the short plot
-                shortPlot = film.getPlot().split(".", 25)[0] + "...";
+                shortPlot = film.getPlot().split("\\.", 25)[0] + "...";
                 longPlot = film.getPlot();
                 String rowId = "row_" + count;
 
