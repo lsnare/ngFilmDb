@@ -1,4 +1,4 @@
-/* CSS for creating a dropdown menu */
+/* CSS for creating a dropdown menu using unordered list*/
     ul{
         padding: 0;
         list-style: none;
@@ -23,7 +23,7 @@
         text-decoration: none;
     }
     ul li a:hover{
-        color: #7BA05B  /* Asparagus */
+        color: #00755E; /* Tropical Rain Forest */
         background: #2D383A; /* Outer Space */
         border-color: #00755E; /* Tropical Rain Forest */
     }
@@ -57,11 +57,12 @@
         cursor:pointer;
         -webkit-border-radius: 5px;
         border-radius: 5px;
+        border-color: #2D383A; /* Outer Space */
         background: #00755E; /* Tropical Rain Forest */
         font-weight: bold;
     }
 
     th {
         background: #00755E; /* Tropical Rain Forest */
-        color: #7BA05B  /* Asparagus */
+        color: #2D383A; /* Outer Space */
     }
