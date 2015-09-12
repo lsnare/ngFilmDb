@@ -69,21 +69,29 @@ public class FilmUtils {
             int count = 0;
 
             filmData += "<table border=1> <tr>"
-                    + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> </tr> ";
+                    + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> <th>Director</th> <th>Actors</th></tr> ";
 
             for (Film film : films) {
-                //Get t";he first 25 words for the short plot
+                //Get the first full sentence for the short plot
                 shortPlot = film.getPlot().split("\\.", 25)[0] + "...";
                 longPlot = film.getPlot();
-                String rowId = "row_" + count;
 
+                String rowId = "row_" + count;
                 filmData += "<tr id = \"" + rowId + "\"><td>" + film.getIdIMDB() + "</td>"
                         + "<td>" + film.getTitle() + "</td>"
                         + "<td>" + film.getYear() + "</td>"
+                        //Create hidden td tag to hold the longer plot description
                         + "<td>" + shortPlot
-                            + "<a href =\"#\" onclick=\"showLongPlot(\'" + rowId + "\')\"> More </a>" + "</td>"
-                        + "<td style=\"display: none;\">" + longPlot + "<a href=\"#\" onclick=\"showShortPlot(\'" + rowId + "\')\"> Less </a>" + "</td>"
-                        + "</tr>";
+                            + "<a href =\"#\" onclick=\"showLongPlot(\'" + rowId + "\')\"> More </a>"
+                        + "</td>"
+                        + "<td style=\"display: none;\">" + longPlot
+                            + "<a href=\"#\" onclick=\"showShortPlot(\'" + rowId + "\')\"> Less </a>"
+                        + "</td>"
+                        + "<td>" + film.getDirectors().get(0) + "</td> <td>";
+                        for (Film.Actor actor : film.getActors()){
+                            filmData += actor.getActorName() + "<br>";
+                        }
+                        filmData += "</td></tr>";
 
                 count ++;
             }
