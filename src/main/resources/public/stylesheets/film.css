@@ -52,6 +52,11 @@
         color: #2D383A; /* Outer Space */
     }
 
+    a {
+        text-decoration: none;
+        color:  #2D383A; /* Outer Space */
+    }
+
     /* Styling for HTML form */
     input[type=submit] {
         padding:5px 15px; background:#ccc; border:0 none;
