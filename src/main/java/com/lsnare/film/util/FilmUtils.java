@@ -62,13 +62,32 @@ public class FilmUtils {
         attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
 
         if(films.size() > 0) {
+            String shortPlot = "";
+            String longPlot = "";
+            String tdShort = "";
+            String tdLong="";
+            int count = 0;
+
             filmData += "<table border=1> <tr>"
                     + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> </tr> ";
+
             for (Film film : films) {
+                //Get t";he first 25 words for the short plot
+                shortPlot = film.getPlot().split(" ", 25)[0] + "...";
+                longPlot = film.getPlot();
+                tdShort = "tdShort_" + count;
+                tdLong = "tdLong_" + count;
+
                 filmData += "<tr><td>" + film.getIdIMDB() + "</td>"
                         + "<td>" + film.getTitle() + "</td>"
                         + "<td>" + film.getYear() + "</td>"
-                        + "<td>" + film.getPlot() + "</td></tr>";
+                        + "<td id=\"" + tdShort + "\">" + shortPlot
+                            + "<a onclick=showLongPlot(" + tdShort + ", "
+                            + tdLong + ")> More </a>"+ "</td>"
+                        + "<td id=\"" + tdLong + "\" style=\"display: none;\">" + longPlot + "</td>"
+                        + "</tr>";
+
+                count ++;
             }
             filmData += "</table>";
         } else {

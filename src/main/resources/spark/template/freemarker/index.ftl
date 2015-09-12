@@ -1,6 +1,7 @@
 <html>
     <head>
         <link rel="stylesheet" type="text/css" href="/stylesheets/film.css" />
+        <Script src="/scripts/JSUtils.js"></Script>
     </head>
     <body bgcolor="#7BA05B"> <!-- Asparagus -->
         <h1><a href="/">Welcome to MyFilmDB</a></h1>
