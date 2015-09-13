@@ -204,6 +204,43 @@ public class FilmDAOImplementation implements FilmDAO{
         return roles;
     }
 
+    public Map<String, String> selectActorsForFilm(String filmTitle) {
+        String sql = "SELECT a.actorName, r.role"
+                + "FROM actor a "
+                + "INNER JOIN actor_film_role r on r.actorId = a.actorId "
+                + "INNER JOIN film f on f.idIMDB = r.idIMDB "
+                + "WHERE UPPER(f.title) LIKE UPPER(?)";
+        Map<String, String> roles = new HashMap();
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            log.info("Connection established");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + actorName + "%");
+            log.info("Searching for " + actorName + " in database");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                roles.put(rs.getString("role"), rs.getString("title"));
+            }
+            log.info("Search complete");
+            log.debug("Found " + roles.size() + " roles related to the search for actor " + actorName);
+            ps.close();
+        } catch (Exception e) {
+            log.error("Film select error: " + e);
+            log.error("Specific error: " + e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("error dao: " + e.getMessage());
+                }
+            }
+        }
+        return roles;
+    }
+
 
 
         /*String actorSql = "INSERT INTO ";

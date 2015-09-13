@@ -69,7 +69,7 @@ public class FilmUtils {
             int count = 0;
 
             filmData += "<table border=1> <tr>"
-                    + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> <th>Director</th> <th>Actors</th></tr> ";
+                    + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> "; // <th>Director</th> <th>Actors</th></tr> ";
 
             for (Film film : films) {
                 //Get the first full sentence for the short plot
@@ -86,12 +86,12 @@ public class FilmUtils {
                         + "</td>"
                         + "<td style=\"display: none;\">" + longPlot
                             + "<a href=\"#\" onclick=\"showShortPlot(\'" + rowId + "\')\"> Less </a>"
-                        + "</td>"
-                        + "<td>" + film.getDirectors().get(0) + "</td> <td>";
-                        for (Film.Actor actor : film.getActors()){
-                            filmData += actor.getActorName() + "<br>";
-                        }
-                        filmData += "</td></tr>";
+                        + "</td>";
+                        //+ "<td>" + film.getDirectors().get(0) + "</td> <td>";
+                        //for (Film.Actor actor : film.getActors()){
+                        //    filmData += actor.getActorName() + "<br>";
+                        //}
+                        filmData += "</tr>";
 
                 count ++;
             }
