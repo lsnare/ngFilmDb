@@ -204,7 +204,7 @@ public class FilmDAOImplementation implements FilmDAO{
         return roles;
     }
 
-    public Map<String, String> selectActorsForFilm(String filmTitle) {
+    /*public Map<String, String> selectActorsForFilm(String filmTitle) {
         String sql = "SELECT a.actorName, r.role"
                 + "FROM actor a "
                 + "INNER JOIN actor_film_role r on r.actorId = a.actorId "
@@ -239,7 +239,7 @@ public class FilmDAOImplementation implements FilmDAO{
             }
         }
         return roles;
-    }
+    }*/
 
 
 
