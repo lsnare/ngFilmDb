@@ -262,7 +262,7 @@ public class FilmDAOImplementation implements FilmDAO{
             ps.setString(1, "%" + filmTitle + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                directors.add(new Director(rs.getString("directorName")));
+                directors.add(new Director(rs.getString("name")));
                 log.info("Adding director " + directors.get(directors.size() - 1).getName() + " to list");
             }
             log.info("Search complete");
