@@ -224,6 +224,7 @@ public class FilmDAOImplementation implements FilmDAO{
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 actors.add(new Actor(rs.getString("actorName")));
+                log.info("Adding actor " + actors.get(actors.size() - 1).getActorName() + " to cast");
             }
             log.info("Search complete");
             log.debug("Found " + actors.size() + " actors related to the film " + filmTitle);
