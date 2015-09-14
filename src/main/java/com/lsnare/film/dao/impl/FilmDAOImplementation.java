@@ -149,7 +149,7 @@ public class FilmDAOImplementation implements FilmDAO{
                 film.setTitle(rs.getString("title"));
                 film.setPlot(rs.getString("plot"));
                 film.setYear(rs.getString("year"));
-                film.setActors(selectActorsForFilm(filmTitle));
+                film.setActors(selectActorsForFilm(film.getTitle()));
                 log.info("Adding " + film.getTitle() + " to results");
                 log.info("Found the following actors: " + film.getActors());
                 films.add(film);
