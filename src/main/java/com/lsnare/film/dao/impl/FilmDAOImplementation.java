@@ -150,6 +150,7 @@ public class FilmDAOImplementation implements FilmDAO{
                 film.setPlot(rs.getString("plot"));
                 film.setYear(rs.getString("year"));
                 film.setActors(selectActorsForFilm(film.getTitle()));
+                film.setDirectors(selectDirectorsForFilm(film.getTitle()));
                 log.info("Adding " + film.getTitle() + " to results");
                 log.info("Found the following actors: " + film.getActors());
                 films.add(film);
@@ -245,6 +246,42 @@ public class FilmDAOImplementation implements FilmDAO{
         return actors;
     }
 
+    public List<Director> selectDirectorsForFilm(String filmTitle) {
+        String sql = "SELECT d.name "
+                + "FROM director d "
+                + "INNER JOIN director_film_assignment dfa on dfa.directorId = d.nameId "
+                + "INNER JOIN film f on f.idIMDB = dfa.idIMDB "
+                + "WHERE UPPER(f.title) LIKE UPPER(?)";
+        List<Director> directors = new ArrayList();
+        Connection conn = null;
+
+        try {
+            conn = dataSource.getConnection();
+            log.info("Connection established");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + filmTitle + "%");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                directors.add(new Director(rs.getString("directorName")));
+                log.info("Adding director " + directors.get(directors.size() - 1).getName() + " to list");
+            }
+            log.info("Search complete");
+            log.debug("Found " + directors.size() + " directors related to the film " + filmTitle);
+            ps.close();
+        } catch (Exception e) {
+            log.error("Actor select error: " + e);
+            log.error("Specific error: " + e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("error dao: " + e.getMessage());
+                }
+            }
+        }
+        return directors;
+    }
 
 
         /*String actorSql = "INSERT INTO ";
