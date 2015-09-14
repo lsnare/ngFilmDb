@@ -208,7 +208,7 @@ public class FilmDAOImplementation implements FilmDAO{
     }
 
     public List<Actor> selectActorsForFilm(String filmTitle) {
-        String sql = "SELECT a.actorName, r.role"
+        String sql = "SELECT a.actorName "
                 + "FROM actor a "
                 + "INNER JOIN actor_film_role r on r.actorId = a.actorId "
                 + "INNER JOIN film f on f.idIMDB = r.idIMDB "
