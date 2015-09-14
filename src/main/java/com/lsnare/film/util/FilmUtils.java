@@ -71,7 +71,7 @@ public class FilmUtils {
 
             filmData += "<table border=1> <col width=\"80\"> <col width=\"100\"> <col width=\"50\"> <col width=\"500\"> <col width=\"250\">"
                     + "<tr>"
-                    + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> "; // <th>Director</th> <th>Actors</th></tr> ";
+                    + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> <th>Actors</th>"; // <th>Director</th> <th>Actors</th></tr> ";
 
             for (Film film : films) {
                 //Get the first full sentence for the short plot
