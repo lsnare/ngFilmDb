@@ -69,7 +69,8 @@ public class FilmUtils {
             String tdLong="";
             int count = 0;
 
-            filmData += "<table border=1> <tr>"
+            filmData += "<table border=1> <col width=\"80\"> <col width=\"100\"> <col width=\"50\"> <col width=\"500\"> <col width=\"250\">"
+                    + "<tr>"
                     + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> "; // <th>Director</th> <th>Actors</th></tr> ";
 
             for (Film film : films) {
