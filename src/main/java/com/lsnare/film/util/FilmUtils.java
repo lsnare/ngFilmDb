@@ -89,11 +89,11 @@ public class FilmUtils {
                         + "<td style=\"display: none;\">" + longPlot
                             + "<a href=\"#\" onclick=\"showShortPlot(\'" + rowId + "\')\"> Less </a>"
                         + "</td>"
-                        + "<td>" + /*film.getDirectors().get(0) + */ "</td> <td>";
+                        + /*"<td>" + /*film.getDirectors().get(0) + "</td>"*/ "<td>";
                         for (Actor actor : film.getActors()){
                             filmData += actor.getActorName() + "<br>";
                         }
-                        filmData += "</tr>";
+                        filmData += "</td></tr>";
 
                 count ++;
             }
