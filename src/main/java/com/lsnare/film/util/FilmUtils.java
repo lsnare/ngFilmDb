@@ -3,6 +3,7 @@ package com.lsnare.film.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lsnare.film.dao.FilmDAO;
+import com.lsnare.film.model.Actor;
 import com.lsnare.film.model.Film;
 import com.lsnare.film.service.HTTPService;
 import org.apache.commons.logging.Log;
@@ -86,11 +87,11 @@ public class FilmUtils {
                         + "</td>"
                         + "<td style=\"display: none;\">" + longPlot
                             + "<a href=\"#\" onclick=\"showShortPlot(\'" + rowId + "\')\"> Less </a>"
-                        + "</td>";
-                        //+ "<td>" + film.getDirectors().get(0) + "</td> <td>";
-                        //for (Film.Actor actor : film.getActors()){
-                        //    filmData += actor.getActorName() + "<br>";
-                        //}
+                        + "</td>"
+                        + "<td>" + film.getDirectors().get(0) + "</td> <td>";
+                        for (Actor actor : film.getActors()){
+                            filmData += actor.getActorName() + "<br>";
+                        }
                         filmData += "</tr>";
 
                 count ++;

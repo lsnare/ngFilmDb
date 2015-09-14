@@ -1,6 +1,8 @@
 package com.lsnare.film.dao.impl;
 
 import com.lsnare.film.dao.FilmDAO;
+import com.lsnare.film.model.Actor;
+import com.lsnare.film.model.Director;
 import com.lsnare.film.model.Film;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -30,7 +32,7 @@ public class FilmDAOImplementation implements FilmDAO{
 
         String sqlActor = "INSERT INTO actor VALUES(?,?)";
         String sqlActorFilmRole = "INSERT INTO actor_film_role VALUES(?,?,?)";
-        for(Film.Actor a : this.film.getActors()){
+        for(Actor a : this.film.getActors()){
             try {
                 PreparedStatement psActor = conn.prepareStatement(sqlActor);
                 psActor.setString(1, a.getActorId());
@@ -57,7 +59,7 @@ public class FilmDAOImplementation implements FilmDAO{
     public void insertDirectors(Connection conn){
         String sqlDirector = "INSERT INTO director VALUES(?,?)";
         String sqlDirectorFilmAssignment = "INSERT INTO director_film_assignment VALUES(?,?)";
-        for(Film.Director d : this.film.getDirectors()){
+        for(Director d : this.film.getDirectors()){
             try {
                 PreparedStatement psDirector = conn.prepareStatement(sqlDirector);
                 psDirector.setString(1, d.getNameId());
@@ -147,6 +149,7 @@ public class FilmDAOImplementation implements FilmDAO{
                 film.setTitle(rs.getString("title"));
                 film.setPlot(rs.getString("plot"));
                 film.setYear(rs.getString("year"));
+                film.setActors(selectActorsForFilm(filmTitle));
                 log.info("Adding " + film.getTitle() + " to results");
                 films.add(film);
             }
@@ -204,30 +207,29 @@ public class FilmDAOImplementation implements FilmDAO{
         return roles;
     }
 
-    /*public Map<String, String> selectActorsForFilm(String filmTitle) {
+    public List<Actor> selectActorsForFilm(String filmTitle) {
         String sql = "SELECT a.actorName, r.role"
                 + "FROM actor a "
                 + "INNER JOIN actor_film_role r on r.actorId = a.actorId "
                 + "INNER JOIN film f on f.idIMDB = r.idIMDB "
                 + "WHERE UPPER(f.title) LIKE UPPER(?)";
-        Map<String, String> roles = new HashMap();
+        List<Actor> actors = new ArrayList();
         Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, "%" + actorName + "%");
-            log.info("Searching for " + actorName + " in database");
+            ps.setString(1, "%" + filmTitle + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                roles.put(rs.getString("role"), rs.getString("title"));
+                actors.add(new Actor(rs.getString("actorName")));
             }
             log.info("Search complete");
-            log.debug("Found " + roles.size() + " roles related to the search for actor " + actorName);
+            log.debug("Found " + actors.size() + " actors related to the film " + filmTitle);
             ps.close();
         } catch (Exception e) {
-            log.error("Film select error: " + e);
+            log.error("Actor select error: " + e);
             log.error("Specific error: " + e.getMessage());
         } finally {
             if (conn != null) {
@@ -238,8 +240,8 @@ public class FilmDAOImplementation implements FilmDAO{
                 }
             }
         }
-        return roles;
-    }*/
+        return actors;
+    }
 
 
 
