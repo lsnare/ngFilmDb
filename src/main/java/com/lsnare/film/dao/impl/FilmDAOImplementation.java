@@ -250,7 +250,7 @@ public class FilmDAOImplementation implements FilmDAO{
         String sql = "SELECT d.name "
                 + "FROM director d "
                 + "INNER JOIN director_film_assignment dfa on dfa.directorId = d.nameId "
-                + "INNER JOIN film f on f.idIMDB = dfa.idIMDB "
+                + "INNER JOIN film f on f.idIMDB = dfa.filmId "
                 + "WHERE UPPER(f.title) LIKE UPPER(?)";
         List<Director> directors = new ArrayList();
         Connection conn = null;
