@@ -23,6 +23,7 @@ public class FilmDAOImplementation implements FilmDAO{
     private DataSource dataSource;
     private Film film;
     Log log = LogFactory.getLog(FilmDAOImplementation.class);
+    Connection conn = null;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -107,7 +108,6 @@ public class FilmDAOImplementation implements FilmDAO{
     public void insert(Film film) {
         this.film = film;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
-        Connection conn = null;
         try {
             conn = dataSource.getConnection();
             log.info("Connection established");
@@ -135,7 +135,6 @@ public class FilmDAOImplementation implements FilmDAO{
 
     public List<Film> selectFilmsByTitle(String filmTitle) {
         String sql = "SELECT * FROM film WHERE UPPER(title) LIKE UPPER(?)";
-        Connection conn = null;
         List<Film> films = new ArrayList<>();
         try {
             conn = dataSource.getConnection();
@@ -179,7 +178,6 @@ public class FilmDAOImplementation implements FilmDAO{
                     + "INNER JOIN film f on f.idIMDB = r.idIMDB "
                     + "WHERE UPPER(a.actorName) LIKE UPPER(?)";
         Map<String, String> roles = new HashMap();
-        Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
@@ -216,7 +214,6 @@ public class FilmDAOImplementation implements FilmDAO{
                 + "INNER JOIN film f on f.idIMDB = r.idIMDB "
                 + "WHERE UPPER(f.title) LIKE UPPER(?)";
         List<Actor> actors = new ArrayList();
-        Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
@@ -253,7 +250,6 @@ public class FilmDAOImplementation implements FilmDAO{
                 + "INNER JOIN film f on f.idIMDB = dfa.filmId "
                 + "WHERE UPPER(f.title) LIKE UPPER(?)";
         List<Director> directors = new ArrayList();
-        Connection conn = null;
 
         try {
             conn = dataSource.getConnection();
