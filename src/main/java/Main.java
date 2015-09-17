@@ -38,15 +38,16 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
 
       post("/add", (request, response) -> {
           Map<String, Object> attributes = new HashMap<>();
-          String result = "";
+          Film[] results = new Film[0];
           String filmTitle = request.queryParams("filmTitle");
           try {
               filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
-              result = FilmUtils.addFilmToDatabase(filmTitle);
+              results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
+              attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
           } catch (Exception e) {
-              attributes.put("message", e.getMessage());
+              //attributes.put("message", e.getMessage());
           } finally {
-              attributes.put("message", result);
+              //attributes.put("message", results);
           }
           return new ModelAndView(attributes, "addFilm.ftl");
       }, new FreeMarkerEngine());
@@ -63,8 +64,8 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           String filmTitle = request.queryParams("filmTitleSearch");
           try {
               filmTitle = URLDecoder.decode(filmTitle, "UTF-8");
-              results = FilmUtils.searchFilmByTitle(filmTitle);
-              attributes = FilmUtils.buildFilmSearchResults(results);
+              results = FilmUtils.searchDatabaseForFilmsByTitle(filmTitle);
+              attributes = FilmUtils.buildDatabaseFilmSearchResults(results);
               log.info("Adding " + results.size() + " results to the page");
           } catch (Exception e) {
               System.out.println("Error on search: " + e);
@@ -85,8 +86,8 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
             String actorName = request.queryParams("actorNameSearch");
             try {
                 actorName = URLDecoder.decode(actorName, "UTF-8");
-                results = FilmUtils.searchRolesForActorByName(actorName);
-                attributes = FilmUtils.buildActorRolesSearchResults(actorName, results);
+                results = FilmUtils.searchDatabaseForActorRoles(actorName);
+                attributes = FilmUtils.buildDatabaseActorRolesSearchResults(actorName, results);
                 log.info("Adding " + results.size() + " results to the page");
             } catch (Exception e) {
                 System.out.println("Error on search: " + e);

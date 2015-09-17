@@ -23,27 +23,33 @@ import java.util.Map;
 public class FilmUtils {
 
     static Log log = LogFactory.getLog(FilmUtils.class);
+    static String myAPIFilmsURL = "http://www.myapifilms.com/imdb?title=FILM_TITLE&format=JSON&lang=en-us&actors=S&filter=M&limit=10";
 
-    public static String addFilmToDatabase(String filmTitle){
-        try{
-            String res = HTTPService.sendGet("http://www.myapifilms.com/imdb?title=" + filmTitle + "&format=JSON&lang=en-us&actors=S");
-            Gson gson = new GsonBuilder().create();
-            Film film = gson.fromJson(res.substring(1, res.length()-1), Film.class);
-            ApplicationContext context =
-                    new ClassPathXmlApplicationContext("Spring-Module.xml");
-            FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
-            filmDAO.insert(film);
-
-        } catch(Exception e){
-            System.out.println(e.getMessage());
-            return e.getMessage();
-        }
-
-        return "<b>Film added to the database successfully!</b>";
-
+    public static String buildMyAPIFilmsURL(String filmTitle){
+        myAPIFilmsURL = myAPIFilmsURL.replace("FILM_TITLE", filmTitle);
+        return myAPIFilmsURL;
     }
 
-    public static List<Film> searchFilmByTitle(String filmTitle){
+    /*******************************/
+    /**        Search Utils       **/
+    /*******************************/
+
+    public static Film[] searchMyAPIFilmsByTitle(String filmTitle){
+        String url = buildMyAPIFilmsURL(filmTitle);
+        Film[] films = new Film[0];
+        try{
+            String res = HTTPService.sendGet(url);
+            Gson gson = new GsonBuilder().create();
+            films = gson.fromJson(res.substring(1, res.length() - 1), Film[].class);
+
+        } catch(Exception e){
+            log.error(e.getMessage());
+            //return e.getMessage();
+        }
+        return films;
+    }
+
+    public static List<Film> searchDatabaseForFilmsByTitle(String filmTitle){
         List<Film> films = new ArrayList<>();
         try{
             ApplicationContext context =
@@ -57,7 +63,40 @@ public class FilmUtils {
         return films;
     }
 
-    public static Map<String, Object> buildFilmSearchResults(List<Film> films){
+    public static Map<String, String> searchDatabaseForActorRoles(String actorName){
+        Map<String, String> rolesForActor = new HashMap();
+        try{
+            ApplicationContext context =
+                    new ClassPathXmlApplicationContext("Spring-Module.xml");
+            FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
+            rolesForActor = filmDAO.selectRolesForActor(actorName);
+            log.info("Found " + rolesForActor.size() + " roles when searching");
+        } catch(Exception e){
+            System.out.println("HTTPService error: " + e);
+        }
+        return rolesForActor;
+    }
+
+    /*******************************/
+    /**       Page Builders       **/
+    /*******************************/
+
+    public static Map<String, Object> buildMyAPIFilmsSearchResults(Film[] films){
+        Map<String, Object> attributes = new HashMap();
+        String filmData = "";
+        if (films.length > 0){
+            filmData += "<table border=1> <col width=\"100\"> <col width=\"50\"> <col width=\"500\">"
+                    + "<tr><th>Title</th><th>Year</th><th>Plot</th></tr>";
+            for (Film film : films){
+                filmData += "<tr><td>"+film.getTitle()+"</td><td>"+film.getYear()+"</td><td>"+film.getPlot()+"</td></tr>";
+            }
+            filmData += "</table>";
+        }
+        attributes.put("filmData", filmData);
+        return attributes;
+    }
+
+    public static Map<String, Object> buildDatabaseFilmSearchResults(List<Film> films){
         String filmData = "";
         Map<String, Object> attributes = new HashMap();
 
@@ -111,21 +150,7 @@ public class FilmUtils {
         return attributes;
     }
 
-    public static Map<String, String> searchRolesForActorByName(String actorName){
-        Map<String, String> rolesForActor = new HashMap();
-        try{
-            ApplicationContext context =
-                    new ClassPathXmlApplicationContext("Spring-Module.xml");
-            FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
-            rolesForActor = filmDAO.selectRolesForActor(actorName);
-            log.info("Found " + rolesForActor.size() + " roles when searching");
-        } catch(Exception e){
-            System.out.println("HTTPService error: " + e);
-        }
-        return rolesForActor;
-    }
-
-    public static Map<String, Object> buildActorRolesSearchResults(String actorName, Map<String, String> roles){
+    public static Map<String, Object> buildDatabaseActorRolesSearchResults(String actorName, Map<String, String> roles){
         String actorData = "";
         Map<String, Object> attributes = new HashMap();
 
