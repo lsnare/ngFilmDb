@@ -23,24 +23,27 @@ import java.util.Map;
 public class FilmUtils {
 
     static Log log = LogFactory.getLog(FilmUtils.class);
-    static String myAPIFilmsURL = "http://www.myapifilms.com/imdb?title=FILM_TITLE&format=JSON&lang=en-us&actors=S&filter=M&limit=10";
+    static String myAPIFilmsURL = "http://www.myapifilms.com/imdb?format=JSON"
+                                + "&aka=0&business=0&seasons=0&seasonYear=0&technical=0&filter=M&"
+                                + "exactFilter=0&limit=10&forceYear=0&lang=en-us&actors=N&biography=0&"
+                                + "trailer=0&uniqueName=0&filmography=0&bornDied=0&starSign=0&"
+                                + "actorActress=0&actorTrivia=0&movieTrivia=0&awards=0&moviePhotos=N&"
+                                + "movieVideos=N&similarMovies=0&adultSearch=0&title=";
 
-    public static String buildMyAPIFilmsURL(String filmTitle){
-        myAPIFilmsURL = myAPIFilmsURL.replace("FILM_TITLE", filmTitle);
-        return myAPIFilmsURL;
-    }
 
     /*******************************/
     /**        Search Utils       **/
     /*******************************/
 
     public static Film[] searchMyAPIFilmsByTitle(String filmTitle){
-        String url = buildMyAPIFilmsURL(filmTitle);
+        String url = myAPIFilmsURL + filmTitle;
+        log.info("URL: " + url);
         Film[] films = new Film[0];
         try{
             String res = HTTPService.sendGet(url);
+            log.info("JSON: " + res);
             Gson gson = new GsonBuilder().create();
-            films = gson.fromJson(res.substring(1, res.length() - 1), Film[].class);
+            films = gson.fromJson(res, Film[].class);
 
         } catch(Exception e){
             log.error(e.getMessage());
