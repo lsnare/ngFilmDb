@@ -40,10 +40,15 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           Map<String, Object> attributes = new HashMap<>();
           Film[] results = new Film[0];
           String filmTitle = request.queryParams("filmTitle");
+          String pageAction = request.queryParams("pageAction");
           try {
-              filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
-              results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
-              attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
+              if(pageAction.equals("SearchMyAPIFilms")) {
+                  filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
+                  results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
+                  attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
+              } else {
+
+              }
           } catch (Exception e) {
               //attributes.put("message", e.getMessage());
           } finally {
@@ -117,13 +122,13 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
             } catch (Exception e) {
                 attributes.put("message", "There was an error: " + e);
                 return new ModelAndView(attributes, "error.ftl");
-          } finally {
-              if (connection != null) try {
-                  connection.close();
-              } catch (SQLException e) {
-              }
-          }
-      }, new FreeMarkerEngine());
+            } finally {
+                if (connection != null) try {
+                    connection.close();
+                } catch (SQLException e) {
+                }
+            }
+        }, new FreeMarkerEngine());
 
   }
 

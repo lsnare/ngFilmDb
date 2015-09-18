@@ -52,6 +52,23 @@ public class FilmUtils {
         return films;
     }
 
+    public static Film[] searchMyAPIFilmsByIMDBId(String filmTitle){
+        String url = myAPIFilmsURL + filmTitle;
+        log.info("URL: " + url);
+        Film[] films = new Film[0];
+        try{
+            String res = HTTPService.sendGet(url);
+            log.info("JSON: " + res);
+            Gson gson = new GsonBuilder().create();
+            films = gson.fromJson(res, Film[].class);
+
+        } catch(Exception e){
+            log.error(e.getMessage());
+            //return e.getMessage();
+        }
+        return films;
+    }
+
     public static List<Film> searchDatabaseForFilmsByTitle(String filmTitle){
         List<Film> films = new ArrayList<>();
         try{
@@ -91,7 +108,11 @@ public class FilmUtils {
             filmData += "<table border=1> <col width=\"100\"> <col width=\"50\"> <col width=\"500\">"
                     + "<tr><th>Title</th><th>Year</th><th>Plot</th></tr>";
             for (Film film : films){
-                filmData += "<tr><td>"+film.getTitle()+"</td><td>"+film.getYear()+"</td><td>"+film.getPlot()+"</td></tr>";
+                filmData += "<tr><td>"+film.getTitle()
+                        +"</td><td>"+film.getYear()
+                        +"</td><td>"+film.getPlot()
+                        +"</td><td><input type=\"submit\" name=\"add\" value=\"Add a Film\" />"
+                        +"</td></tr>";
             }
             filmData += "</table>";
         }
