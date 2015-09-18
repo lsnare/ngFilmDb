@@ -111,7 +111,8 @@ public class FilmUtils {
                 filmData += "<tr><td>"+film.getTitle()
                         +"</td><td>"+film.getYear()
                         +"</td><td>"+film.getPlot()
-                        +"</td><td><input type=\"submit\" name=\"add\" value=\"Add a Film\" />"
+                        +"</td><td style=\"display: none;\"><input type=\"text\" name=\"IMDBId\" value=\"" + film.getIdIMDB() + "\"/>"
+                        +"</td><td><input type=\"submit\" name=\"addFilmButton\" value=\"Add Film\" form=\"searchResultsTable\" />"
                         +"</td></tr>";
             }
             filmData += "</table>";

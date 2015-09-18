@@ -40,15 +40,10 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           Map<String, Object> attributes = new HashMap<>();
           Film[] results = new Film[0];
           String filmTitle = request.queryParams("filmTitle");
-          String pageAction = request.queryParams("pageAction");
           try {
-              if(pageAction.equals("SearchMyAPIFilms")) {
-                  filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
-                  results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
-                  attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
-              } else {
-
-              }
+              filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
+              results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
+              attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
           } catch (Exception e) {
               //attributes.put("message", e.getMessage());
           } finally {
@@ -56,6 +51,22 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
           }
           return new ModelAndView(attributes, "addFilm.ftl");
       }, new FreeMarkerEngine());
+
+        post("/insertFilm", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+            Film[] results = new Film[0];
+            String id = request.queryParams("IMDBId");
+            try {
+                //filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
+                //results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
+                //attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
+            } catch (Exception e) {
+                //attributes.put("message", e.getMessage());
+            } finally {
+                attributes.put("message", id);
+            }
+            return new ModelAndView(attributes, "addFilm.ftl");
+        }, new FreeMarkerEngine());
 
       get("/search", (request, response) -> {
           Map<String, Object> attributes = new HashMap<>();
