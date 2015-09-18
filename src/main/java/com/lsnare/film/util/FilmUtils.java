@@ -24,11 +24,11 @@ public class FilmUtils {
 
     static Log log = LogFactory.getLog(FilmUtils.class);
     static String myAPIFilmsURL = "http://www.myapifilms.com/imdb?format=JSON"
-                                + "&aka=0&business=0&seasons=0&seasonYear=0&technical=0&filter=M&"
-                                + "exactFilter=0&limit=10&forceYear=0&lang=en-us&actors=N&biography=0&"
+                                + "&aka=0&business=0&seasons=0&seasonYear=0&technical=0"
+                                + "&lang=en-us&actors=S&biography=0&"
                                 + "trailer=0&uniqueName=0&filmography=0&bornDied=0&starSign=0&"
                                 + "actorActress=0&actorTrivia=0&movieTrivia=0&awards=0&moviePhotos=N&"
-                                + "movieVideos=N&similarMovies=0&adultSearch=0&title=";
+                                + "movieVideos=N&similarMovies=0";
 
 
     /*******************************/
@@ -36,7 +36,7 @@ public class FilmUtils {
     /*******************************/
 
     public static Film[] searchMyAPIFilmsByTitle(String filmTitle){
-        String url = myAPIFilmsURL + filmTitle;
+        String url = myAPIFilmsURL + "&filter=M&limit=10&title=" + filmTitle;
         log.info("URL: " + url);
         Film[] films = new Film[0];
         try{
@@ -52,10 +52,10 @@ public class FilmUtils {
         return films;
     }
 
-    public static Film[] searchMyAPIFilmsByIMDBId(String filmTitle){
-        String url = myAPIFilmsURL + filmTitle;
+    public static Film searchMyAPIFilmsByIMDBId(String IMDBId){
+        String url = myAPIFilmsURL + "&idIMDB=" + IMDBId;
         log.info("URL: " + url);
-        Film[] films = new Film[0];
+        Film film = new Film();
         try{
             String res = HTTPService.sendGet(url);
             log.info("JSON: " + res);
@@ -66,7 +66,7 @@ public class FilmUtils {
             log.error(e.getMessage());
             //return e.getMessage();
         }
-        return films;
+        return film;
     }
 
     public static List<Film> searchDatabaseForFilmsByTitle(String filmTitle){
@@ -103,19 +103,15 @@ public class FilmUtils {
 
     public static Map<String, Object> buildMyAPIFilmsSearchResults(Film[] films){
         Map<String, Object> attributes = new HashMap();
-        String filmData = "";
+        String filmData = "<fieldset>";
         if (films.length > 0){
-            filmData += "<table border=1> <col width=\"100\"> <col width=\"50\"> <col width=\"500\">"
-                    + "<tr><th>Title</th><th>Year</th><th>Plot</th></tr>";
+            filmData ="";
             for (Film film : films){
-                filmData += "<tr><td>"+film.getTitle()
-                        +"</td><td>"+film.getYear()
-                        +"</td><td>"+film.getPlot()
-                        +"</td><td style=\"display: none;\"><input type=\"text\" name=\"IMDBId\" value=\"" + film.getIdIMDB() + "\"/>"
-                        +"</td><td><input type=\"submit\" name=\"addFilmButton\" value=\"Add Film\" form=\"searchResultsTable\" />"
-                        +"</td></tr>";
+                filmData += "<input type=\"radio\" name=\"film\" value=\"" + film.getIdIMDB() + "\">"
+                        + film.getTitle() + "&nbsp" + film.getYear() + "<br>";
             }
-            filmData += "</table>";
+            filmData += "<input type=\"submit\" name=\"insertFilm\" value=\"Insert Film\" form=\"searchResultsTable\"/>";
+            filmData += "</fieldset>";
         }
         attributes.put("filmData", filmData);
         return attributes;

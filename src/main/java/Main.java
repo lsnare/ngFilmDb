@@ -1,10 +1,8 @@
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.sql.*;
-import java.util.HashMap;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+
 import static spark.Spark.*;
 import com.lsnare.film.model.Film;
 import com.lsnare.film.util.FilmUtils;
@@ -54,10 +52,10 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
 
         post("/insertFilm", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            Film[] results = new Film[0];
-            String id = request.queryParams("IMDBId");
+            String id = request.queryParams("film");
+            Film film = new Film();
             try {
-                //filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
+                film =
                 //results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
                 //attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
             } catch (Exception e) {
