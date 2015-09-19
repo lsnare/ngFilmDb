@@ -4,10 +4,14 @@ import java.sql.*;
 import java.util.*;
 
 import static spark.Spark.*;
+
+import com.lsnare.film.dao.FilmDAO;
 import com.lsnare.film.model.Film;
 import com.lsnare.film.util.FilmUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import spark.template.freemarker.FreeMarkerEngine;
 import spark.ModelAndView;
 import static spark.Spark.get;
@@ -55,13 +59,15 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
             String id = request.queryParams("film");
             Film film = new Film();
             try {
-                film =
-                //results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
-                //attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
+                film = FilmUtils.searchMyAPIFilmsByIMDBId(id);
+                ApplicationContext context =
+                        new ClassPathXmlApplicationContext("Spring-Module.xml");
+                FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
+                filmDAO.insert(film);
             } catch (Exception e) {
-                //attributes.put("message", e.getMessage());
+                attributes.put("message", "Error on insert: " + e.getMessage());
             } finally {
-                attributes.put("message", id);
+                attributes.put("message", film.getTitle() + " was inserted into the database successfully!");
             }
             return new ModelAndView(attributes, "addFilm.ftl");
         }, new FreeMarkerEngine());

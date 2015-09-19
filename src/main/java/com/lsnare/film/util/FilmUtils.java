@@ -60,7 +60,7 @@ public class FilmUtils {
             String res = HTTPService.sendGet(url);
             log.info("JSON: " + res);
             Gson gson = new GsonBuilder().create();
-            films = gson.fromJson(res, Film[].class);
+            film = gson.fromJson(res, Film.class);
 
         } catch(Exception e){
             log.error(e.getMessage());
