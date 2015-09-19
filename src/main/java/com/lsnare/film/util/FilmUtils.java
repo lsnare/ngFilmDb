@@ -36,7 +36,7 @@ public class FilmUtils {
     /*******************************/
 
     public static Film[] searchMyAPIFilmsByTitle(String filmTitle){
-        String url = myAPIFilmsURL + "&filter=M&limit=10&title=" + filmTitle;
+        String url = myAPIFilmsURL + "&adultSearch=0&exactFilter=0&forceYear=0&filter=M&limit=10&title=" + filmTitle;
         log.info("URL: " + url);
         Film[] films = new Film[0];
         try{
