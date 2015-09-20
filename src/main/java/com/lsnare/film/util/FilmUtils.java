@@ -32,8 +32,9 @@ public class FilmUtils {
     /*******************************/
 
     public static Film[] searchMyAPIFilmsByTitle(String filmTitle){
+        //Add title search-specific filters onto URL
         String url = myAPIFilmsURL + "&filter=M&limit=10&title=" + filmTitle;
-        log.info("URL: " + url);
+        log.info("Search URL: " + url);
         Film[] films = new Film[0];
         try{
             String res = HTTPService.sendGet(url);
@@ -42,26 +43,25 @@ public class FilmUtils {
             films = gson.fromJson(res, Film[].class);
 
         } catch(Exception e){
-            log.error(e.getMessage());
-            //return e.getMessage();
+            log.error("Error searching MyAPIFilms by title: " + e.getMessage());
         }
         return films;
     }
 
     public static Film searchMyAPIFilmsByIMDBId(String IMDBId){
+        //Add IMDB Id search-specific filters onto URL
         String url = myAPIFilmsURL + "&actors=S&idIMDB=" + IMDBId;
-        log.info("URL: " + url);
+        log.info("Search URL: " + url);
         Film film = new Film();
         try{
             String res = HTTPService.sendGet(url);
-            log.info("JSON: " + res);
+            log.info("JSON returned: " + res);
             Gson gson = new GsonBuilder().create();
             //Film JSON come back as an array, but will only have one result
             film = gson.fromJson(res, Film[].class)[0];
 
         } catch(Exception e){
-            log.error(e.getMessage());
-            //return e.getMessage();
+            log.error("Error searching MyAPIFilms by IMDB Id: " + e.getMessage());
         }
         return film;
     }
@@ -75,7 +75,7 @@ public class FilmUtils {
             films = filmDAO.selectFilmsByTitle(filmTitle);
             log.info("Found " + films.size() + " films when searching");
         } catch(Exception e){
-            System.out.println("HTTPService error: " + e);
+            log.error("Error searching database by title: " + e);
         }
         return films;
     }
@@ -89,7 +89,7 @@ public class FilmUtils {
             rolesForActor = filmDAO.selectRolesForActor(actorName);
             log.info("Found " + rolesForActor.size() + " roles when searching");
         } catch(Exception e){
-            System.out.println("HTTPService error: " + e);
+            log.error("Error searching atabase for roles: " + e);
         }
         return rolesForActor;
     }
@@ -100,9 +100,10 @@ public class FilmUtils {
 
     public static Map<String, Object> buildMyAPIFilmsSearchResults(Film[] films){
         Map<String, Object> attributes = new HashMap();
-        String filmData = "<fieldset>";
+        String filmData = "";
         if (films.length > 0){
-            filmData ="";
+            filmData += "<fieldset>";
+            //Create a list of radio inputs with values set to each film's IMDB Id
             for (Film film : films){
                 filmData += "<input type=\"radio\" name=\"film\" value=\"" + film.getIdIMDB() + "\">"
                         + film.getTitle() + "&nbsp" + film.getYear() + "<br>";
@@ -121,10 +122,9 @@ public class FilmUtils {
         attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
 
         if(films.size() > 0) {
+
             String shortPlot = "";
             String longPlot = "";
-            String tdShort = "";
-            String tdLong="";
             int count = 0;
 
             filmData += "<table border=1> <col width=\"80\"> <col width=\"100\"> <col width=\"50\"> <col width=\"500\"> <col width=\"250\">"
@@ -136,21 +136,25 @@ public class FilmUtils {
                 shortPlot = film.getPlot().split("\\.", 25)[0] + "...";
                 longPlot = film.getPlot();
 
+                //HTML TR id field
                 String rowId = "row_" + count;
                 filmData += "<tr id = \"" + rowId + "\"><td>" + film.getIdIMDB() + "</td>"
                         + "<td>" + film.getTitle() + "</td>"
                         + "<td>" + film.getYear() + "</td>"
-                        //Create hidden td tag to hold the longer plot description
+                        //Short plot
                         + "<td>" + shortPlot
                             + "<a href =\"#\" onclick=\"showLongPlot(\'" + rowId + "\')\"> More </a>"
                         + "</td>"
+                        //Create hidden td tag to hold the longer plot description
                         + "<td style=\"display: none;\">" + longPlot
                             + "<a href=\"#\" onclick=\"showShortPlot(\'" + rowId + "\')\"> Less </a>"
                         + "</td>"
+                        //Fill in actor list
                         + "<td>";
                         for (Actor actor : film.getActors()){
                             filmData += actor.getActorName() + "<br>";
                         }
+                        //Fill in director list
                         filmData += "</td><td>";
                         for (Director director : film.getDirectors()){
                             filmData += director.getName() + "<br>";
