@@ -58,7 +58,7 @@ public class FilmUtils {
             log.info("JSON returned: " + res);
             Gson gson = new GsonBuilder().create();
             //Film JSON come back as an array, but will only have one result
-            film = gson.fromJson(res, Film[].class)[0];
+            film = gson.fromJson(res, Film.class);
 
         } catch(Exception e){
             log.error("Error searching MyAPIFilms by IMDB Id: " + e.getMessage());
