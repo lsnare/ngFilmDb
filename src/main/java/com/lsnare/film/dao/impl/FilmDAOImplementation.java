@@ -105,7 +105,7 @@ public class FilmDAOImplementation implements FilmDAO{
         }
     }
 
-    public void insert(Film film) {
+    public void insert(Film film) throws SQLException{
         this.film = film;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
         try {
