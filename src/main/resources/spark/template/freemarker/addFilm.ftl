@@ -1,7 +1,7 @@
 <html>
     <body>
         <#include "index.ftl">
-        <form action = "/add" method = "post">
+        <form action = "/searchMyAPIFilms" method = "get">
             <input type="text" name="filmTitle"/> <input type="submit" name="add" value="Add a Film" />
         </form>
         <#if filmData??>
