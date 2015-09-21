@@ -108,18 +108,19 @@ public class FilmDAOImplementation implements FilmDAO{
     public void insert(Film film) throws SQLException{
         this.film = film;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
-        conn = dataSource.getConnection();
-        log.info("Connection established");
-        PreparedStatement ps = conn.prepareStatement(sql);
-        ps.setString(1, film.getIdIMDB());
-        ps.setString(2, film.getTitle());
-        ps.setString(3, film.getPlot());
-        ps.setString(4, film.getYear());
-        ps.execute();
-        log.info("Inserted film");
-        insertActors(conn);
-        insertDirectors(conn);
-        ps.close();
+        try (Connection conn = dataSource.getConnection()){
+            log.info("Connection established");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, film.getIdIMDB());
+            ps.setString(2, film.getTitle());
+            ps.setString(3, film.getPlot());
+            ps.setString(4, film.getYear());
+            ps.execute();
+            log.info("Inserted film");
+            insertActors(conn);
+            insertDirectors(conn);
+            ps.close();
+        }
     }
 
     public List<Film> selectFilmsByTitle(String filmTitle) {
