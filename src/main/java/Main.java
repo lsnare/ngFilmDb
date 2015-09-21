@@ -67,6 +67,7 @@ public class Main {
                 FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
                 filmDAO.insert(film);
             } catch (SQLException e){
+                log.error(e);
                 attributes.put("message", "Error on insert: " + e.getMessage());
             } catch (Exception e) {
                 attributes.put("message", "Error on insert: " + e.getMessage());
