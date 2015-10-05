@@ -1,6 +1,7 @@
 package com.lsnare.film.dao.impl;
 
 import com.lsnare.film.dao.FilmDAO;
+import com.lsnare.film.exception.DuplicateFilmException;
 import com.lsnare.film.model.Actor;
 import com.lsnare.film.model.Director;
 import com.lsnare.film.model.Film;
@@ -105,7 +106,7 @@ public class FilmDAOImplementation implements FilmDAO{
         }
     }
 
-    public void insert(Film film) throws SQLException{
+    public void insert(Film film) throws DuplicateFilmException{
         this.film = film;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
         try (Connection conn = dataSource.getConnection()){
@@ -120,6 +121,10 @@ public class FilmDAOImplementation implements FilmDAO{
             insertActors(conn);
             insertDirectors(conn);
             ps.close();
+        } catch (SQLException e){
+            if (e.getMessage().contains("duplicate key value violates unique constraint \"film_pkey\"")){
+                throw new DuplicateFilmException(this.film.getTitle());
+            }
         }
     }
 

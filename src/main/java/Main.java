@@ -6,6 +6,7 @@ import java.util.*;
 import static spark.Spark.*;
 
 import com.lsnare.film.dao.FilmDAO;
+import com.lsnare.film.exception.DuplicateFilmException;
 import com.lsnare.film.model.Film;
 import com.lsnare.film.util.FilmUtils;
 import org.apache.commons.logging.Log;
@@ -66,9 +67,9 @@ public class Main {
                         new ClassPathXmlApplicationContext("Spring-Module.xml");
                 FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
                 filmDAO.insert(film);
-            } catch (SQLException e){
+            } catch (DuplicateFilmException e){
                 log.error(e);
-                attributes.put("message", "Error on insert: " + e.getMessage());
+                attributes.put("error", "Error on insert: " + e.getMessage());
             } catch (Exception e) {
                 attributes.put("message", "Error on insert: " + e.getMessage());
             }
