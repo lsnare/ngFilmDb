@@ -10,6 +10,7 @@
             </form>
         </#if>
         <#if message??>${message}</#if>
+        <#if error??>${error}</#if>
     </body>
 </html>
 

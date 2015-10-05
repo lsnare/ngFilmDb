@@ -71,9 +71,10 @@ public class Main {
                 log.error(e);
                 attributes.put("error", "Error on insert: " + e.getMessage());
             } catch (Exception e) {
-                attributes.put("message", "Error on insert: " + e.getMessage());
+                attributes.put("error", "Error on insert: " + e.getMessage());
+            } finally {
+                attributes.put("message", film.getTitle() + " was inserted into the database successfully!");
             }
-            attributes.put("message", film.getTitle() + " was inserted into the database successfully!");
             return new ModelAndView(attributes, "addFilm.ftl");
         }, new FreeMarkerEngine());
 
