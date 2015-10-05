@@ -67,13 +67,12 @@ public class Main {
                         new ClassPathXmlApplicationContext("Spring-Module.xml");
                 FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
                 filmDAO.insert(film);
+                attributes.put("message", film.getTitle() + " was inserted into the database successfully!");
             } catch (DuplicateFilmException e){
                 log.error(e);
                 attributes.put("error", "Error on insert: " + e.getMessage());
             } catch (Exception e) {
                 attributes.put("error", "Error on insert: " + e.getMessage());
-            } finally {
-                attributes.put("message", film.getTitle() + " was inserted into the database successfully!");
             }
             return new ModelAndView(attributes, "addFilm.ftl");
         }, new FreeMarkerEngine());
