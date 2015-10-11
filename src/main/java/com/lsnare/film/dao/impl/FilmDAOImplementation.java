@@ -186,7 +186,8 @@ public class FilmDAOImplementation implements FilmDAO {
                 String currentFilmTitle = rs.getString("title");
                 String currentRole = rs.getString("role");
 
-                if (roles.containsKey(actorName)) {
+                log.info("Working with actor: " + currentActorName + " role: " + currentRole + " film: " + currentFilmTitle);
+                if (roles.containsKey(currentActorName)) {
                     //Update the mappings for actors we have already looped over
                     Map<String, String> rolesForCurrentActor = roles.get(currentActorName);
                     log.info("Adding the role of " + currentRole + " in the film " + currentFilmTitle + " for " + currentActorName);
