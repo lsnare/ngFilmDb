@@ -80,8 +80,8 @@ public class FilmUtils {
         return films;
     }
 
-    public static Map<String, String> searchDatabaseForActorRoles(String actorName){
-        Map<String, String> rolesForActor = new HashMap();
+    public static Map<String, Map<String,String>> searchDatabaseForActorRoles(String actorName){
+        Map<String, Map<String, String>> rolesForActor = new HashMap();
         try{
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("Spring-Module.xml");
@@ -172,16 +172,26 @@ public class FilmUtils {
         return attributes;
     }
 
-    public static Map<String, Object> buildDatabaseActorRolesSearchResults(String actorName, Map<String, String> roles){
+    public static Map<String, Object> buildDatabaseActorRolesSearchResults(Map<String, Map<String,String>> roles){
         String actorData = "";
         Map<String, Object> attributes = new HashMap();
 
         attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
-        actorData += "<ul><li>" + actorName + "</li>";
-        for (String role : roles.keySet()){
-            actorData += "<ul><li>" + role + "&nbsp <i>" + roles.get(role) + "</i></li>";
+
+        for (String actorName : roles.keySet()){
+            Map<String, String> rolesForActor = roles.get(actorName);
+
+            actorData += "<h2>" + actorName + "</h2>";
+            actorData += "<table border=1> <col width=\"150\"> <col width=\"150\">";
+            actorData += "<tr><th>Film</th><th>Role</th></tr>";
+
+            for(String nextFilm : rolesForActor.keySet()){
+                actorData += "<tr><td>" + nextFilm + "</td><td>" + rolesForActor.get(nextFilm) + "</td></tr>";
+            }
+
+            actorData += "</table>";
         }
-        actorData += "</ul>";
+
         attributes.put("actorData", actorData);
 
         return attributes;

@@ -1,5 +1,7 @@
 package com.lsnare.film.model;
 
+import java.util.Map;
+
 /**
  * Created by lucian.snare on 9/13/2015.
  */
@@ -11,6 +13,7 @@ public class Actor {
     public String urlCharacter;
     public String urlPhoto;
     public String urlProfile;
+    public Map<String, String> rolesForActor;
 
     public Actor(String actorName){
         this.actorName = actorName;

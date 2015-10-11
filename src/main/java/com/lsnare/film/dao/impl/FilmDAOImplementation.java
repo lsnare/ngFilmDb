@@ -18,7 +18,7 @@ import java.util.Map;
 /**
  * Created by lucian on 9/2/15.
  */
-public class FilmDAOImplementation implements FilmDAO{
+public class FilmDAOImplementation implements FilmDAO {
 
     String error = "";
     private DataSource dataSource;
@@ -30,11 +30,11 @@ public class FilmDAOImplementation implements FilmDAO{
         this.dataSource = dataSource;
     }
 
-    public void insertActors(Connection conn){
+    public void insertActors(Connection conn) {
 
         String sqlActor = "INSERT INTO actor VALUES(?,?)";
         String sqlActorFilmRole = "INSERT INTO actor_film_role VALUES(?,?,?)";
-        for(Actor a : this.film.getActors()){
+        for (Actor a : this.film.getActors()) {
             try {
                 PreparedStatement psActor = conn.prepareStatement(sqlActor);
                 psActor.setString(1, a.getActorId());
@@ -58,10 +58,10 @@ public class FilmDAOImplementation implements FilmDAO{
         log.info("Finished inserting actors");
     }
 
-    public void insertDirectors(Connection conn){
+    public void insertDirectors(Connection conn) {
         String sqlDirector = "INSERT INTO director VALUES(?,?)";
         String sqlDirectorFilmAssignment = "INSERT INTO director_film_assignment VALUES(?,?)";
-        for(Director d : this.film.getDirectors()){
+        for (Director d : this.film.getDirectors()) {
             try {
                 PreparedStatement psDirector = conn.prepareStatement(sqlDirector);
                 psDirector.setString(1, d.getNameId());
@@ -75,7 +75,7 @@ public class FilmDAOImplementation implements FilmDAO{
                     psDirectorFilmAssignment.setString(1, d.getNameId());
                     psDirectorFilmAssignment.setString(2, this.film.getIdIMDB());
                     psDirectorFilmAssignment.execute();
-                } catch (Exception e){
+                } catch (Exception e) {
                     log.error(e.getMessage());
                 }
             }
@@ -83,10 +83,10 @@ public class FilmDAOImplementation implements FilmDAO{
         log.info("Finished inserting directors");
     }
 
-    public void insertGenres(Connection conn){
+    public void insertGenres(Connection conn) {
         String sqlGenre = "INSERT INTO genre VALUES(?)";
         String sqlFilmGenre = "INSERT INTO film_genre VALUES(?,?)";
-        for(String g : this.film.getGenres()){
+        for (String g : this.film.getGenres()) {
             try {
                 PreparedStatement psGenre = conn.prepareStatement(sqlGenre);
                 psGenre.setString(1, g);
@@ -99,17 +99,17 @@ public class FilmDAOImplementation implements FilmDAO{
                     psFilmGenre.setString(1, g);
                     psFilmGenre.setString(2, this.film.getIdIMDB());
                     psFilmGenre.execute();
-                } catch (Exception e){
+                } catch (Exception e) {
                     System.out.println(e.getMessage());
                 }
             }
         }
     }
 
-    public void insert(Film film) throws DuplicateFilmException{
+    public void insert(Film film) throws DuplicateFilmException {
         this.film = film;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
-        try (Connection conn = dataSource.getConnection()){
+        try (Connection conn = dataSource.getConnection()) {
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, film.getIdIMDB());
@@ -121,8 +121,8 @@ public class FilmDAOImplementation implements FilmDAO{
             insertActors(conn);
             insertDirectors(conn);
             ps.close();
-        } catch (SQLException e){
-            if (e.getMessage().contains("duplicate key value violates unique constraint \"film_pkey\"")){
+        } catch (SQLException e) {
+            if (e.getMessage().contains("duplicate key value violates unique constraint \"film_pkey\"")) {
                 throw new DuplicateFilmException(this.film.getTitle());
             }
         }
@@ -166,13 +166,13 @@ public class FilmDAOImplementation implements FilmDAO{
         return films;
     }
 
-    public Map<String, String> selectRolesForActor(String actorName) {
-        String sql = "SELECT r.role, f.title "
-                    + "FROM actor a "
-                    + "INNER JOIN actor_film_role r on r.actorId = a.actorId "
-                    + "INNER JOIN film f on f.idIMDB = r.idIMDB "
-                    + "WHERE UPPER(a.actorName) LIKE UPPER(?)";
-        Map<String, String> roles = new HashMap();
+    public Map<String, Map<String, String>> selectRolesForActor(String actorName) {
+        String sql = "SELECT a.actorName, r.role, f.title "
+                + "FROM actor a "
+                + "INNER JOIN actor_film_role r on r.actorId = a.actorId "
+                + "INNER JOIN film f on f.idIMDB = r.idIMDB "
+                + "WHERE UPPER(a.actorName) LIKE UPPER(?)";
+        Map<String, Map<String, String>> roles = new HashMap();
 
         try {
             conn = dataSource.getConnection();
@@ -182,7 +182,21 @@ public class FilmDAOImplementation implements FilmDAO{
             log.info("Searching for " + actorName + " in database");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                roles.put(rs.getString("role"), rs.getString("title"));
+                String currentActorName = rs.getString("actorName");
+                String currentFilmTitle = rs.getString("title");
+                String currentRole = rs.getString("role");
+
+                if (roles.containsKey(actorName)) {
+                    //Update the mappings for actors we have already looped over
+                    Map<String, String> rolesForCurrentActor = roles.get(currentActorName);
+                    rolesForCurrentActor.put(currentFilmTitle, currentRole);
+                    roles.put(currentActorName, rolesForCurrentActor);
+                } else {
+                    Map currentRoleMapping = new HashMap<String, String>();
+                    currentRoleMapping.put(currentFilmTitle, currentRole);
+                    roles.put(currentActorName, currentRoleMapping);
+                }
+
             }
             log.info("Search complete");
             log.debug("Found " + roles.size() + " roles related to the search for actor " + actorName);
@@ -273,30 +287,5 @@ public class FilmDAOImplementation implements FilmDAO{
         }
         return directors;
     }
-
-
-        /*String actorSql = "INSERT INTO ";
-        try {
-            connection = DatabaseUrl.extract().getConnection();
-
-            Statement stmt = connection.createStatement();
-            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-            stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-            ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
-            ArrayList<String> output = new ArrayList<String>();
-            while (rs.next()) {
-                output.add( "Read from DB: " + rs.getTimestamp("tick"));
-            }
-
-            attributes.put("results", output);
-            return new ModelAndView(attributes, "db.ftl");
-        } catch (Exception e) {
-            attributes.put("message", "There was an error: " + e);
-            return new ModelAndView(attributes, "error.ftl");
-        } finally {
-            if (connection != null) try{connection.close();} catch(SQLException e){}
-        }*/
-
-    }
+}
 

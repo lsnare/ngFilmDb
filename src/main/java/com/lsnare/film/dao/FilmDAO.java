@@ -12,5 +12,5 @@ import java.util.Map;
 public interface FilmDAO {
     public void insert(Film film) throws DuplicateFilmException;
     public List<Film> selectFilmsByTitle(String title);
-    public Map<String, String> selectRolesForActor(String actorName);
+    public Map<String, Map<String, String>> selectRolesForActor(String actorName);
 }

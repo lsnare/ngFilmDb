@@ -106,48 +106,19 @@ public class Main {
 
         //Search for a film in the database
         post("/searchActor", (request, response) -> {
-            Map<String, String> results = new HashMap();
+            Map<String, Map<String, String>> results = new HashMap();
             Map<String, Object> attributes = new HashMap();
             String actorName = request.queryParams("actorNameSearch");
             try {
                 actorName = URLDecoder.decode(actorName, "UTF-8");
                 results = FilmUtils.searchDatabaseForActorRoles(actorName);
-                attributes = FilmUtils.buildDatabaseActorRolesSearchResults(actorName, results);
+                attributes = FilmUtils.buildDatabaseActorRolesSearchResults(results);
                 log.info("Adding " + results.size() + " results to the page");
             } catch (Exception e) {
                 System.out.println("Error on search: " + e);
                 attributes.put("error", e);
             }
             return new ModelAndView(attributes, "searchActor.ftl");
-        }, new FreeMarkerEngine());
-
-        get("/db", (req, res) -> {
-            Connection connection = null;
-            Map<String, Object> attributes = new HashMap<>();
-            try {
-                connection = DatabaseUrl.extract().getConnection();
-
-                Statement stmt = connection.createStatement();
-                stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-                stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-                ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
-                ArrayList<String> output = new ArrayList<String>();
-                while (rs.next()) {
-                    output.add("Read from DB: " + rs.getTimestamp("tick"));
-                }
-
-                attributes.put("results", output);
-                return new ModelAndView(attributes, "db.ftl");
-            } catch (Exception e) {
-                attributes.put("message", "There was an error: " + e);
-                return new ModelAndView(attributes, "error.ftl");
-            } finally {
-                if (connection != null) try {
-                    connection.close();
-                } catch (SQLException e) {
-                }
-            }
         }, new FreeMarkerEngine());
 
     }
