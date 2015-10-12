@@ -10,6 +10,8 @@ import java.net.URL;
  */
 public class HTTPService {
 
+    private static final int TIMEOUT = 20000;
+
     public static String sendGet(String url) throws Exception {
 
         URL obj = new URL(url);
@@ -17,6 +19,7 @@ public class HTTPService {
 
         // optional default is GET
         con.setRequestMethod("GET");
+        con.setConnectTimeout(TIMEOUT);
 
         int responseCode = con.getResponseCode();
         System.out.println("\nSending 'GET' request to URL : " + url);

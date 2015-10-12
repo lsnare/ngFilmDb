@@ -3,6 +3,7 @@ package com.lsnare.film.util;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lsnare.film.dao.FilmDAO;
+import com.lsnare.film.exception.MyAPIFilmsConnectionException;
 import com.lsnare.film.model.Actor;
 import com.lsnare.film.model.Director;
 import com.lsnare.film.model.Film;
@@ -31,7 +32,7 @@ public class FilmUtils {
     /**        Search Utils       **/
     /*******************************/
 
-    public static Film[] searchMyAPIFilmsByTitle(String filmTitle){
+    public static Film[] searchMyAPIFilmsByTitle(String filmTitle) throws MyAPIFilmsConnectionException{
         //Add title search-specific filters onto URL
         String url = myAPIFilmsURL + "&filter=M&limit=10&title=" + filmTitle;
         log.info("Search URL: " + url);
@@ -44,6 +45,9 @@ public class FilmUtils {
 
         } catch(Exception e){
             log.error("Error searching MyAPIFilms by title: " + e.getMessage());
+            if (e.getMessage().contains("www.myapifilms.com")){
+                throw new MyAPIFilmsConnectionException(e.getMessage());
+            }
         }
         return films;
     }

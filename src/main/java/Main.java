@@ -7,6 +7,7 @@ import static spark.Spark.*;
 
 import com.lsnare.film.dao.FilmDAO;
 import com.lsnare.film.exception.DuplicateFilmException;
+import com.lsnare.film.exception.MyAPIFilmsConnectionException;
 import com.lsnare.film.model.Film;
 import com.lsnare.film.util.FilmUtils;
 import org.apache.commons.logging.Log;
@@ -50,8 +51,10 @@ public class Main {
                 filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
                 results = FilmUtils.searchMyAPIFilmsByTitle(filmTitle);
                 attributes = FilmUtils.buildMyAPIFilmsSearchResults(results);
-            } catch (Exception e) {
-                attributes.put("message", "Error: " + e.getMessage());
+            } catch (MyAPIFilmsConnectionException e){
+                attributes.put("error", e.getMessage());
+            } catch(Exception e){
+                attributes.put("error", "Error: " + e.getMessage());
             }
             return new ModelAndView(attributes, "addFilm.ftl");
         }, new FreeMarkerEngine());
@@ -68,7 +71,7 @@ public class Main {
                 FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
                 filmDAO.insert(film);
                 attributes.put("message", film.getTitle() + " was inserted into the database successfully!");
-            } catch (DuplicateFilmException e){
+            } catch (DuplicateFilmException e) {
                 log.error(e);
                 attributes.put("error", "Error on insert: " + e.getMessage());
             } catch (Exception e) {
