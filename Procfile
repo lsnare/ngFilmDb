@@ -1,2 +1,2 @@
-web:    java -cp target/classes:target/dependency/* Main
-worker: java -cp target/classes:target/dependency/* FilmCrewBatchWorker
+web:                    java -cp target/classes:target/dependency/* Main
+filmCrewBatchWorker:    java -cp target/classes:target/dependency/* com.lsnare.film.worker.FilmCrewBatchWorker
