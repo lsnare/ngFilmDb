@@ -19,7 +19,7 @@ public class FilmCrewBatchWorker {
 
                 //sleep
                 log.info("Film updates complete");
-                Thread.sleep(RUN_INTERVAL);
+                Thread.sleep(Integer.valueOf(System.getenv("FILM_CREW_BATCH_WORKER_RUN_INTERVAL")));
             } catch (Exception e) {
 
             }
