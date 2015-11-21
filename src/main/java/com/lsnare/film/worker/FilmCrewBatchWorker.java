@@ -7,7 +7,7 @@ import org.apache.commons.logging.LogFactory;
  * Created by lucian.snare on 11/20/2015.
  */
 public class FilmCrewBatchWorker {
-    public static final int RUN_INTERVAL = 30000;
+    public static final int RUN_INTERVAL = 1000 * 60 * 30;
     static Log log = LogFactory.getLog(FilmCrewBatchWorker.class);
 
     public static void main(String[] args) {
@@ -19,7 +19,7 @@ public class FilmCrewBatchWorker {
 
                 //sleep
                 log.info("Film updates complete");
-                Thread.sleep(Integer.valueOf(System.getenv("FILM_CREW_BATCH_WORKER_RUN_INTERVAL")));
+                Thread.sleep();
             } catch (Exception e) {
 
             }
