@@ -58,10 +58,73 @@ public class FilmDAOImplementation implements FilmDAO {
         log.info("Finished inserting actors");
     }
 
+    public void insertActors(List<Actor> actors) {
+
+        String sqlActor = "INSERT INTO actor VALUES(?,?)";
+        String sqlActorFilmRole = "INSERT INTO actor_film_role VALUES(?,?,?)";
+        try{
+            Connection conn = dataSource.getConnection();
+        } catch (Exception e) {
+            log.error(e.getMessage());
+        }
+        for (Actor a : actors) {
+            try {
+                PreparedStatement psActor = conn.prepareStatement(sqlActor);
+                psActor.setString(1, a.getActorId());
+                psActor.setString(2, a.getActorName());
+                psActor.execute();
+            } catch (SQLException e) {
+                log.info(e.getMessage());
+            } finally {
+                //if an actor already exists, we still need to create an actor film role link
+                try {
+                    PreparedStatement psActorFilmRole = conn.prepareStatement(sqlActorFilmRole);
+                    psActorFilmRole.setString(1, a.getActorId());
+                    psActorFilmRole.setString(2, this.film.getIdIMDB());
+                    psActorFilmRole.setString(3, a.getCharacter());
+                    psActorFilmRole.execute();
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        log.info("Finished inserting actors");
+    }
+
     public void insertDirectors(Connection conn) {
         String sqlDirector = "INSERT INTO director VALUES(?,?)";
         String sqlDirectorFilmAssignment = "INSERT INTO director_film_assignment VALUES(?,?)";
         for (Director d : this.film.getDirectors()) {
+            try {
+                PreparedStatement psDirector = conn.prepareStatement(sqlDirector);
+                psDirector.setString(1, d.getNameId());
+                psDirector.setString(2, d.getName());
+                psDirector.execute();
+            } catch (SQLException e) {
+                log.info(e.getMessage());
+            } finally {
+                try {
+                    PreparedStatement psDirectorFilmAssignment = conn.prepareStatement(sqlDirectorFilmAssignment);
+                    psDirectorFilmAssignment.setString(1, d.getNameId());
+                    psDirectorFilmAssignment.setString(2, this.film.getIdIMDB());
+                    psDirectorFilmAssignment.execute();
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                }
+            }
+        }
+        log.info("Finished inserting directors");
+    }
+
+    public void insertDirectors(List<Director> directors) {
+        String sqlDirector = "INSERT INTO director VALUES(?,?)";
+        String sqlDirectorFilmAssignment = "INSERT INTO director_film_assignment VALUES(?,?)";
+        try {
+            Connection conn = dataSource.getConnection();
+        } catch (Exception e){
+            log.error(e.getMessage());
+        }
+        for (Director d : directors) {
             try {
                 PreparedStatement psDirector = conn.prepareStatement(sqlDirector);
                 psDirector.setString(1, d.getNameId());
@@ -124,6 +187,63 @@ public class FilmDAOImplementation implements FilmDAO {
         } catch (SQLException e) {
             if (e.getMessage().contains("duplicate key value violates unique constraint \"film_pkey\"")) {
                 throw new DuplicateFilmException(this.film.getTitle());
+            }
+        }
+    }
+
+    //Selects all films that are missing actors, directors, etc.
+    public List<Film> selectDirtyFilms(){
+        String sql = "SELECT * FROM film WHERE isDataComplete = FALSE";
+        List<Film> films = new ArrayList<>();
+
+        try {
+            conn = dataSource.getConnection();
+            log.info("Connection established");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Film film = new Film();
+                film.setIdIMDB(rs.getString("idIMDB"));
+                log.info("Adding " + film.getTitle() + " to results");
+                films.add(film);
+            }
+            log.info("Search complete");
+            log.debug("Found " + films.size() + " films that need to be completed");
+            ps.close();
+        } catch (Exception e) {
+            log.error("Film select error: " + e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("error dao: " + e.getMessage());
+                }
+            }
+        }
+        return films;
+    }
+
+    public void markFilmAsClean(String idIMDB){
+        String sql = "UPDATE film WHERE idIMDB = ? SET isDataComplete = TRUE";
+
+        try {
+            conn = dataSource.getConnection();
+            log.info("Connection established");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, idIMDB);
+            ResultSet rs = ps.executeQuery();
+            log.info("Film marked as clean");
+            ps.close();
+        } catch (Exception e) {
+            log.error("Film update error: " + e);
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("error dao: " + e.getMessage());
+                }
             }
         }
     }

@@ -24,7 +24,7 @@ import java.util.Map;
 public class FilmUtils {
 
     static Log log = LogFactory.getLog(FilmUtils.class);
-    static String myAPIFilmsURL = "http://www.myapifilms.com/imdb?format=JSON"
+    public static String myAPIFilmsURL = "http://www.myapifilms.com/imdb?format=JSON"
                                 + "&lang=en-us&uniqueName=0";
 
 
