@@ -19,7 +19,7 @@ public class FilmCrewBatchWorker {
 
                 //sleep
                 log.info("Film updates complete");
-                Thread.sleep();
+                Thread.sleep(RUN_INTERVAL);
             } catch (Exception e) {
 
             }
