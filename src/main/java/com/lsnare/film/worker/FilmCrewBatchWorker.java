@@ -11,16 +11,18 @@ public class FilmCrewBatchWorker {
     static Log log = LogFactory.getLog(FilmCrewBatchWorker.class);
 
     public static void main(String[] args) {
-        try {
-            //check film records that need to be updated
-            log.info("Processing film updates...");
-            //update all dirty records
+        while(true){
+            try {
+                //check film records that need to be updated
+                log.info("Processing film updates...");
+                //update all dirty records
 
-            //sleep
-            log.info("Film updates complete");
-            Thread.sleep(RUN_INTERVAL);
-        } catch (Exception e) {
+                //sleep
+                log.info("Film updates complete");
+                Thread.sleep(RUN_INTERVAL);
+            } catch (Exception e) {
 
+            }
         }
     }
 
