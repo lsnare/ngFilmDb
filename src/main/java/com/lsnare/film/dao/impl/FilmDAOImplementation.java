@@ -211,7 +211,7 @@ public class FilmDAOImplementation implements FilmDAO {
             log.debug("Found " + films.size() + " films that need to be completed");
             ps.close();
         } catch (Exception e) {
-            log.error("Dirty film select error: " + e.getMessage());
+            log.error("Dirty film select error: " + e + "\n" + e.getStackTrace().toString());
         } finally {
             if (conn != null) {
                 try {
