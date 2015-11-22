@@ -211,7 +211,7 @@ public class FilmDAOImplementation implements FilmDAO {
             log.debug("Found " + films.size() + " films that need to be completed");
             ps.close();
         } catch (Exception e) {
-            log.error("Film select error: " + e);
+            log.error("Dirty film select error: " + e.getMessage());
         } finally {
             if (conn != null) {
                 try {
@@ -242,7 +242,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 try {
                     conn.close();
                 } catch (SQLException e) {
-                    log.error("error dao: " + e.getMessage());
+                    log.error("Error marking films as clean: " + e.getMessage());
                 }
             }
         }
