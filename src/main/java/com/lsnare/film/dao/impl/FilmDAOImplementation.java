@@ -197,7 +197,7 @@ public class FilmDAOImplementation implements FilmDAO {
         List<Film> films = new ArrayList<>();
 
         try {
-            conn = dataSource.getConnection();
+            Connection conn = dataSource.getConnection();
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -228,7 +228,7 @@ public class FilmDAOImplementation implements FilmDAO {
         String sql = "UPDATE film WHERE idIMDB = ? SET isDataComplete = TRUE";
 
         try {
-            conn = dataSource.getConnection();
+            Connection conn = dataSource.getConnection();
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, idIMDB);
