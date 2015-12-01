@@ -9,6 +9,8 @@ import com.lsnare.film.service.HTTPService;
 import com.lsnare.film.util.FilmUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import java.util.List;
 
@@ -18,15 +20,16 @@ import java.util.List;
 public class FilmCrewBatchWorker {
     public static final int RUN_INTERVAL = 1000 * 60 * 30;
     static Log log = LogFactory.getLog(FilmCrewBatchWorker.class);
-    static FilmDAOImplementation dao = new FilmDAOImplementation();
 
 
     public static void main(String[] args) {
         while(true){
             try {
+                ApplicationContext context = new ClassPathXmlApplicationContext("Spring-Module.xml");
+                FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
                 //check film records that need to be updated
                 log.info("Processing film updates...");
-                List<Film> films = dao.selectDirtyFilms();
+                List<Film> films = filmDAO.selectDirtyFilms();
                 log.info("Found " + films.size() + " films to update");
 
                 //update all dirty records
@@ -38,9 +41,9 @@ public class FilmCrewBatchWorker {
                     Gson gson = new GsonBuilder().create();
                     //Film JSON come back as an array, but will only have one result
                     film = gson.fromJson(res, Film.class);
-                    dao.insertActors(film.getActors());
-                    dao.insertDirectors(film.getDirectors());
-                    dao.markFilmAsClean(film.idIMDB);
+                    filmDAO.insertActors(film.getActors());
+                    filmDAO.insertDirectors(film.getDirectors());
+                    filmDAO.markFilmAsClean(film.idIMDB);
                 }
 
                 //sleep
