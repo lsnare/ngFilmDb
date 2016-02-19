@@ -24,7 +24,8 @@ import java.util.Map;
 public class FilmUtils {
 
     static Log log = LogFactory.getLog(FilmUtils.class);
-    public static String myAPIFilmsURL = "http://www.myapifilms.com/imdb?format=JSON"
+    public static String myAPIFilmsURL = "http://www.myapifilms.com/imdb/idIMDB?__ATTR_TO_SEARCH__"
+                                        + "&format=json"
                                         + "&token=" + System.getenv("MY_API_FILMS_TOKEN")
                                         + "&lang=en-us&uniqueName=0";
 
@@ -35,7 +36,10 @@ public class FilmUtils {
 
     public static Film[] searchMyAPIFilmsByTitle(String filmTitle) throws MyAPIFilmsConnectionException{
         //Add title search-specific filters onto URL
-        String url = myAPIFilmsURL + "&filter=M&limit=10&title=" + filmTitle;
+
+        //filter=3 specifies movies only
+        String url = myAPIFilmsURL + "&filter=3&limit=10";
+        url = url.replace("__ATTR_TO_SEARCH__", "title="+filmTitle);
         log.info("Search URL: " + url);
         Film[] films = new Film[0];
         try{
@@ -55,7 +59,8 @@ public class FilmUtils {
 
     public static Film searchMyAPIFilmsByIMDBId(String IMDBId){
         //Add IMDB Id search-specific filters onto URL
-        String url = myAPIFilmsURL + "&actors=S&idIMDB=" + IMDBId;
+        String url = myAPIFilmsURL + "&actors=S";
+        url = url.replace("__ATTR_TO_SEARCH__", "idIMDB="+IMDBId);
         log.info("Search URL: " + url);
         Film film = new Film();
         try{
