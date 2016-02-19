@@ -25,7 +25,8 @@ public class FilmUtils {
 
     static Log log = LogFactory.getLog(FilmUtils.class);
     public static String myAPIFilmsURL = "http://www.myapifilms.com/imdb?format=JSON"
-                                + "&lang=en-us&uniqueName=0";
+                                        + "&token=" + System.getenv("MY_API_FILMS_TOKEN")
+                                        + "&lang=en-us&uniqueName=0";
 
 
     /*******************************/
