@@ -146,7 +146,7 @@ public class FilmUtils {
                 filmData += "<input type=\"radio\" name=\"film\" value=\"" + movie.getIdIMDB() + "\">"
                         + movie.getTitle() + "&nbsp" + movie.getYear() + "<br>";
             }
-            filmData += "<input type=\"submit\" name=\"insertFilm\" value=\"Insert Movie\" form=\"searchResultsTable\"/>";
+            filmData += "<input type=\"submit\" name=\"insertFilm\" value=\"Insert Film\" form=\"searchResultsTable\"/>";
             filmData += "</fieldset>";
         }
         attributes.put("filmData", filmData);

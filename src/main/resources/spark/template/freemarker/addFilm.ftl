@@ -2,7 +2,7 @@
     <body>
         <#include "index.ftl">
         <form action = "/searchMyAPIFilms" method = "get">
-            <input type="text" name="filmTitle"/> <input type="submit" name="add" value="Add a Film" />
+            <input type="text" name="filmTitle"/> <input type="submit" name="add" value="Search IMDB" />
         </form>
         <#if filmData??>
             <form action="/insertFilm" method="post" id="searchResultsTable">
