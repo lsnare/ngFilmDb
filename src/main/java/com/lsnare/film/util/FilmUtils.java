@@ -6,7 +6,7 @@ import com.lsnare.film.dao.FilmDAO;
 import com.lsnare.film.exception.MyAPIFilmsConnectionException;
 import com.lsnare.film.model.Actor;
 import com.lsnare.film.model.Director;
-import com.lsnare.film.model.Film;
+import com.lsnare.film.model.Movie;
 import com.lsnare.film.service.HTTPService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -34,60 +34,88 @@ public class FilmUtils {
     /**        Search Utils       **/
     /*******************************/
 
-    public static Film[] searchMyAPIFilmsByTitle(String filmTitle) throws MyAPIFilmsConnectionException{
+    private class Result {
+        public Data getData() {
+            return data;
+        }
+
+        public void setData(Data data) {
+            this.data = data;
+        }
+
+        Data data;
+    }
+
+    private class Data{
+        public Movie[] getMovies() {
+            return movies;
+        }
+
+        public void setMovies(Movie[] movies) {
+            this.movies = movies;
+        }
+
+        Movie[] movies;
+    }
+
+    public static Movie[] searchMyAPIFilmsByTitle(String filmTitle) throws MyAPIFilmsConnectionException{
         //Add title search-specific filters onto URL
 
         //filter=3 specifies movies only
         String url = myAPIFilmsURL + "&filter=3&limit=10";
         url = url.replace("__ATTR_TO_SEARCH__", "title="+filmTitle);
         log.info("Search URL: " + url);
-        Film[] films = new Film[0];
+        Movie[] movies = new Movie[0];
         try{
             String res = HTTPService.sendGet(url);
             log.info("JSON: " + res);
             Gson gson = new GsonBuilder().create();
-            films = gson.fromJson(res, Film[].class);
-
+            Result result = gson.fromJson(res, Result.class);
+            movies = result.getData().getMovies();
+            log.info("Found movies from data result: " + movies);
         } catch(Exception e){
             log.error("Error searching MyAPIFilms by title: " + e.getMessage());
             if (e.getMessage().contains("www.myapifilms.com")){
                 throw new MyAPIFilmsConnectionException(e.getMessage());
             }
         }
-        return films;
+        return movies;
     }
 
-    public static Film searchMyAPIFilmsByIMDBId(String IMDBId){
+    public static Movie searchMyAPIFilmsByIMDBId(String IMDBId){
         //Add IMDB Id search-specific filters onto URL
-        String url = myAPIFilmsURL + "&actors=S";
+
+        //actors=1 specifies simple list of actors
+        String url = myAPIFilmsURL + "&actors=1";
         url = url.replace("__ATTR_TO_SEARCH__", "idIMDB="+IMDBId);
         log.info("Search URL: " + url);
-        Film film = new Film();
+        Movie movie = new Movie();
         try{
             String res = HTTPService.sendGet(url);
             log.info("JSON returned: " + res);
             Gson gson = new GsonBuilder().create();
-            //Film JSON come back as an array, but will only have one result
-            film = gson.fromJson(res, Film.class);
-
+            //Movie JSON come back as an array, but will only have one result
+            Result result = gson.fromJson(res, Result.class);
+            movie = result.getData().getMovies()[0];
+            log.info("Found this movies from data result: " + movie);
         } catch(Exception e){
             log.error("Error searching MyAPIFilms by IMDB Id: " + e.getMessage());
         }
-        return film;
+        return movie;
     }
 
-    public static List<Film> searchDatabaseForFilmsByTitle(String filmTitle){
-        List<Film> films = new ArrayList<>();
+    public static List<Movie> searchDatabaseForFilmsByTitle(String filmTitle){
+        List<Movie> movies = new ArrayList<>();
         try{
             ApplicationContext context =
                     new ClassPathXmlApplicationContext("Spring-Module.xml");
             FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
-            films = filmDAO.selectFilmsByTitle(filmTitle);
-            log.info("Found " + films.size() + " films when searching");
+            movies = filmDAO.selectFilmsByTitle(filmTitle);
+            log.info("Found " + movies.size() + " movies when searching");
         } catch(Exception e){
             log.error("Error searching database by title: " + e);
         }
-        return films;
+        return movies;
     }
 
     public static Map<String, Map<String,String>> searchDatabaseForActorRoles(String actorName){
@@ -108,30 +136,30 @@ public class FilmUtils {
     /**       Page Builders       **/
     /*******************************/
 
-    public static Map<String, Object> buildMyAPIFilmsSearchResults(Film[] films){
+    public static Map<String, Object> buildMyAPIFilmsSearchResults(Movie[] movies){
         Map<String, Object> attributes = new HashMap();
         String filmData = "";
-        if (films.length > 0){
+        if (movies.length > 0){
             filmData += "<fieldset>";
             //Create a list of radio inputs with values set to each film's IMDB Id
-            for (Film film : films){
-                filmData += "<input type=\"radio\" name=\"film\" value=\"" + film.getIdIMDB() + "\">"
-                        + film.getTitle() + "&nbsp" + film.getYear() + "<br>";
+            for (Movie movie : movies){
+                filmData += "<input type=\"radio\" name=\"film\" value=\"" + movie.getIdIMDB() + "\">"
+                        + movie.getTitle() + "&nbsp" + movie.getYear() + "<br>";
             }
-            filmData += "<input type=\"submit\" name=\"insertFilm\" value=\"Insert Film\" form=\"searchResultsTable\"/>";
+            filmData += "<input type=\"submit\" name=\"insertFilm\" value=\"Insert Movie\" form=\"searchResultsTable\"/>";
             filmData += "</fieldset>";
         }
         attributes.put("filmData", filmData);
         return attributes;
     }
 
-    public static Map<String, Object> buildDatabaseFilmSearchResults(List<Film> films){
+    public static Map<String, Object> buildDatabaseFilmSearchResults(List<Movie> movies){
         String filmData = "";
         Map<String, Object> attributes = new HashMap();
 
         attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
 
-        if(films.size() > 0) {
+        if(movies.size() > 0) {
 
             String shortPlot = "";
             String longPlot = "";
@@ -141,16 +169,16 @@ public class FilmUtils {
                     + "<tr>"
                     + "<th>IMDB ID</th> <th>Title</th> <th>Year</th> <th>Plot</th> <th>Actors</th> <th>Director</th> </tr>";
 
-            for (Film film : films) {
+            for (Movie movie : movies) {
                 //Get the first full sentence for the short plot
-                shortPlot = film.getPlot().split("\\.", 25)[0] + "...";
-                longPlot = film.getPlot();
+                shortPlot = movie.getPlot().split("\\.", 25)[0] + "...";
+                longPlot = movie.getPlot();
 
                 //HTML TR id field
                 String rowId = "row_" + count;
-                filmData += "<tr id = \"" + rowId + "\"><td>" + film.getIdIMDB() + "</td>"
-                        + "<td>" + film.getTitle() + "</td>"
-                        + "<td>" + film.getYear() + "</td>"
+                filmData += "<tr id = \"" + rowId + "\"><td>" + movie.getIdIMDB() + "</td>"
+                        + "<td>" + movie.getTitle() + "</td>"
+                        + "<td>" + movie.getYear() + "</td>"
                         //Short plot
                         + "<td>" + shortPlot
                             + "<a href =\"#\" onclick=\"showLongPlot(\'" + rowId + "\')\"> More </a>"
@@ -161,12 +189,12 @@ public class FilmUtils {
                         + "</td>"
                         //Fill in actor list
                         + "<td>";
-                        for (Actor actor : film.getActors()){
+                        for (Actor actor : movie.getActors()){
                             filmData += actor.getActorName() + "<br>";
                         }
                         //Fill in director list
                         filmData += "</td><td>";
-                        for (Director director : film.getDirectors()){
+                        for (Director director : movie.getDirectors()){
                             filmData += director.getName() + "<br>";
                         }
                         filmData += "</td></tr>";
@@ -193,7 +221,7 @@ public class FilmUtils {
 
             actorData += "<h2>" + actorName + "</h2>";
             actorData += "<table border=1> <col width=\"150\"> <col width=\"150\">";
-            actorData += "<tr><th>Film</th><th>Role</th></tr>";
+            actorData += "<tr><th>Movie</th><th>Role</th></tr>";
 
             for(String nextFilm : rolesForActor.keySet()){
                 actorData += "<tr><td>" + nextFilm + "</td><td>" + rolesForActor.get(nextFilm) + "</td></tr>";

@@ -2,7 +2,7 @@ package com.lsnare.film.model;
 import java.util.List;
 
 
-public class Film {
+public class Movie {
 
     public List<Actor> actors;
     public List<String> countries;
@@ -27,14 +27,14 @@ public class Film {
     public List<Director> writers;
     public String year;
 
-    public Film(String idIMDB, String title, String plot, String year){
+    public Movie(String idIMDB, String title, String plot, String year){
         this.idIMDB = idIMDB;
         this.title = title;
         this.plot = plot;
         this.year = year;
     }
 
-    public Film(){
+    public Movie(){
     }
 
     public List<Actor> getActors() {

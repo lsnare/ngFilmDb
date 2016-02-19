@@ -1,6 +1,6 @@
 import java.net.URLDecoder;
 import java.net.URLEncoder;
-import java.sql.*;
+
 import java.util.*;
 
 import static spark.Spark.*;
@@ -8,7 +8,7 @@ import static spark.Spark.*;
 import com.lsnare.film.dao.FilmDAO;
 import com.lsnare.film.exception.DuplicateFilmException;
 import com.lsnare.film.exception.MyAPIFilmsConnectionException;
-import com.lsnare.film.model.Film;
+import com.lsnare.film.model.Movie;
 import com.lsnare.film.util.FilmUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -18,8 +18,6 @@ import spark.template.freemarker.FreeMarkerEngine;
 import spark.ModelAndView;
 
 import static spark.Spark.get;
-
-import com.heroku.sdk.jdbc.DatabaseUrl;
 
 public class Main {
 
@@ -45,7 +43,7 @@ public class Main {
         //Endpoint for searching MyAPIFilms
         get("/searchMyAPIFilms", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            Film[] results = new Film[0];
+            Movie[] results = new Movie[0];
             String filmTitle = request.queryParams("filmTitle");
             try {
                 filmTitle = URLEncoder.encode(filmTitle, "UTF-8");
@@ -63,14 +61,14 @@ public class Main {
         post("/insertFilm", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             String id = request.queryParams("film");
-            Film film = new Film();
+            Movie movie = new Movie();
             try {
-                film = FilmUtils.searchMyAPIFilmsByIMDBId(id);
+                movie = FilmUtils.searchMyAPIFilmsByIMDBId(id);
                 ApplicationContext context =
                         new ClassPathXmlApplicationContext("Spring-Module.xml");
                 FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
-                filmDAO.insert(film);
-                attributes.put("message", film.getTitle() + " was inserted into the database successfully!");
+                filmDAO.insert(movie);
+                attributes.put("message", movie.getTitle() + " was inserted into the database successfully!");
             } catch (DuplicateFilmException e) {
                 log.error(e);
                 attributes.put("error", "Error on insert: " + e.getMessage());
@@ -87,7 +85,7 @@ public class Main {
 
         //Search for a film in the database
         post("/search", (request, response) -> {
-            List<Film> results = new ArrayList<>();
+            List<Movie> results = new ArrayList<>();
             Map<String, Object> attributes = new HashMap();
             String filmTitle = request.queryParams("filmTitleSearch");
             try {

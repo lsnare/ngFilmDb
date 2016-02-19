@@ -4,7 +4,7 @@ import com.lsnare.film.dao.FilmDAO;
 import com.lsnare.film.exception.DuplicateFilmException;
 import com.lsnare.film.model.Actor;
 import com.lsnare.film.model.Director;
-import com.lsnare.film.model.Film;
+import com.lsnare.film.model.Movie;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -22,7 +22,7 @@ public class FilmDAOImplementation implements FilmDAO {
 
     String error = "";
     private DataSource dataSource;
-    private Film film;
+    private Movie movie;
     Log log = LogFactory.getLog(FilmDAOImplementation.class);
     Connection conn = null;
 
@@ -34,7 +34,7 @@ public class FilmDAOImplementation implements FilmDAO {
 
         String sqlActor = "INSERT INTO actor VALUES(?,?)";
         String sqlActorFilmRole = "INSERT INTO actor_film_role VALUES(?,?,?)";
-        for (Actor a : this.film.getActors()) {
+        for (Actor a : this.movie.getActors()) {
             try {
                 PreparedStatement psActor = conn.prepareStatement(sqlActor);
                 psActor.setString(1, a.getActorId());
@@ -43,11 +43,11 @@ public class FilmDAOImplementation implements FilmDAO {
             } catch (SQLException e) {
                 log.info(e.getMessage());
             } finally {
-                //if an actor already exists, we still need to create an actor film role link
+                //if an actor already exists, we still need to create an actor movie role link
                 try {
                     PreparedStatement psActorFilmRole = conn.prepareStatement(sqlActorFilmRole);
                     psActorFilmRole.setString(1, a.getActorId());
-                    psActorFilmRole.setString(2, this.film.getIdIMDB());
+                    psActorFilmRole.setString(2, this.movie.getIdIMDB());
                     psActorFilmRole.setString(3, a.getCharacter());
                     psActorFilmRole.execute();
                 } catch (Exception e) {
@@ -76,11 +76,11 @@ public class FilmDAOImplementation implements FilmDAO {
             } catch (SQLException e) {
                 log.info(e.getMessage());
             } finally {
-                //if an actor already exists, we still need to create an actor film role link
+                //if an actor already exists, we still need to create an actor movie role link
                 try {
                     PreparedStatement psActorFilmRole = conn.prepareStatement(sqlActorFilmRole);
                     psActorFilmRole.setString(1, a.getActorId());
-                    psActorFilmRole.setString(2, this.film.getIdIMDB());
+                    psActorFilmRole.setString(2, this.movie.getIdIMDB());
                     psActorFilmRole.setString(3, a.getCharacter());
                     psActorFilmRole.execute();
                 } catch (Exception e) {
@@ -94,7 +94,7 @@ public class FilmDAOImplementation implements FilmDAO {
     public void insertDirectors(Connection conn) {
         String sqlDirector = "INSERT INTO director VALUES(?,?)";
         String sqlDirectorFilmAssignment = "INSERT INTO director_film_assignment VALUES(?,?)";
-        for (Director d : this.film.getDirectors()) {
+        for (Director d : this.movie.getDirectors()) {
             try {
                 PreparedStatement psDirector = conn.prepareStatement(sqlDirector);
                 psDirector.setString(1, d.getNameId());
@@ -106,7 +106,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 try {
                     PreparedStatement psDirectorFilmAssignment = conn.prepareStatement(sqlDirectorFilmAssignment);
                     psDirectorFilmAssignment.setString(1, d.getNameId());
-                    psDirectorFilmAssignment.setString(2, this.film.getIdIMDB());
+                    psDirectorFilmAssignment.setString(2, this.movie.getIdIMDB());
                     psDirectorFilmAssignment.execute();
                 } catch (Exception e) {
                     log.error(e.getMessage());
@@ -136,7 +136,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 try {
                     PreparedStatement psDirectorFilmAssignment = conn.prepareStatement(sqlDirectorFilmAssignment);
                     psDirectorFilmAssignment.setString(1, d.getNameId());
-                    psDirectorFilmAssignment.setString(2, this.film.getIdIMDB());
+                    psDirectorFilmAssignment.setString(2, this.movie.getIdIMDB());
                     psDirectorFilmAssignment.execute();
                 } catch (Exception e) {
                     log.error(e.getMessage());
@@ -149,7 +149,7 @@ public class FilmDAOImplementation implements FilmDAO {
     public void insertGenres(Connection conn) {
         String sqlGenre = "INSERT INTO genre VALUES(?)";
         String sqlFilmGenre = "INSERT INTO film_genre VALUES(?,?)";
-        for (String g : this.film.getGenres()) {
+        for (String g : this.movie.getGenres()) {
             try {
                 PreparedStatement psGenre = conn.prepareStatement(sqlGenre);
                 psGenre.setString(1, g);
@@ -160,7 +160,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 try {
                     PreparedStatement psFilmGenre = conn.prepareStatement(sqlFilmGenre);
                     psFilmGenre.setString(1, g);
-                    psFilmGenre.setString(2, this.film.getIdIMDB());
+                    psFilmGenre.setString(2, this.movie.getIdIMDB());
                     psFilmGenre.execute();
                 } catch (Exception e) {
                     System.out.println(e.getMessage());
@@ -169,32 +169,32 @@ public class FilmDAOImplementation implements FilmDAO {
         }
     }
 
-    public void insert(Film film) throws DuplicateFilmException {
-        this.film = film;
+    public void insert(Movie movie) throws DuplicateFilmException {
+        this.movie = movie;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
         try (Connection conn = dataSource.getConnection()) {
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
-            ps.setString(1, film.getIdIMDB());
-            ps.setString(2, film.getTitle());
-            ps.setString(3, film.getPlot());
-            ps.setString(4, film.getYear());
+            ps.setString(1, movie.getIdIMDB());
+            ps.setString(2, movie.getTitle());
+            ps.setString(3, movie.getPlot());
+            ps.setString(4, movie.getYear());
             ps.execute();
-            log.info("Inserted film");
+            log.info("Inserted movie");
             insertActors(conn);
             insertDirectors(conn);
             ps.close();
         } catch (SQLException e) {
             if (e.getMessage().contains("duplicate key value violates unique constraint \"film_pkey\"")) {
-                throw new DuplicateFilmException(this.film.getTitle());
+                throw new DuplicateFilmException(this.movie.getTitle());
             }
         }
     }
 
     //Selects all films that are missing actors, directors, etc.
-    public List<Film> selectDirtyFilms(){
+    public List<Movie> selectDirtyFilms(){
         String sql = "SELECT * FROM film WHERE isDataComplete = FALSE";
-        List<Film> films = new ArrayList<>();
+        List<Movie> movies = new ArrayList<>();
 
         try {
             Connection conn = dataSource.getConnection();
@@ -202,16 +202,16 @@ public class FilmDAOImplementation implements FilmDAO {
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Film film = new Film();
-                film.setIdIMDB(rs.getString("idIMDB"));
-                log.info("Adding " + film.getTitle() + " to results");
-                films.add(film);
+                Movie movie = new Movie();
+                movie.setIdIMDB(rs.getString("idIMDB"));
+                log.info("Adding " + movie.getTitle() + " to results");
+                movies.add(movie);
             }
             log.info("Search complete");
-            log.debug("Found " + films.size() + " films that need to be completed");
+            log.debug("Found " + movies.size() + " movies that need to be completed");
             ps.close();
         } catch (Exception e) {
-            log.error("Dirty film select error: " + e + "\n");
+            log.error("Dirty movie select error: " + e + "\n");
             e.printStackTrace();
         } finally {
             if (conn != null) {
@@ -222,7 +222,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 }
             }
         }
-        return films;
+        return movies;
     }
 
     public void markFilmAsClean(String idIMDB){
@@ -234,10 +234,10 @@ public class FilmDAOImplementation implements FilmDAO {
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, idIMDB);
             ResultSet rs = ps.executeQuery();
-            log.info("Film marked as clean");
+            log.info("Movie marked as clean");
             ps.close();
         } catch (Exception e) {
-            log.error("Film update error: " + e);
+            log.error("Movie update error: " + e);
         } finally {
             if (conn != null) {
                 try {
@@ -249,9 +249,9 @@ public class FilmDAOImplementation implements FilmDAO {
         }
     }
 
-    public List<Film> selectFilmsByTitle(String filmTitle) {
+    public List<Movie> selectFilmsByTitle(String filmTitle) {
         String sql = "SELECT * FROM film WHERE UPPER(title) LIKE UPPER(?)";
-        List<Film> films = new ArrayList<>();
+        List<Movie> movies = new ArrayList<>();
         try {
             conn = dataSource.getConnection();
             log.info("Connection established");
@@ -259,22 +259,22 @@ public class FilmDAOImplementation implements FilmDAO {
             ps.setString(1, "%" + filmTitle + "%");
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                Film film = new Film();
-                film.setIdIMDB(rs.getString("idIMDB"));
-                film.setTitle(rs.getString("title"));
-                film.setPlot(rs.getString("plot"));
-                film.setYear(rs.getString("year"));
-                film.setActors(selectActorsForFilm(film.getTitle()));
-                film.setDirectors(selectDirectorsForFilm(film.getTitle()));
-                log.info("Adding " + film.getTitle() + " to results");
-                log.info("Found the following actors: " + film.getActors());
-                films.add(film);
+                Movie movie = new Movie();
+                movie.setIdIMDB(rs.getString("idIMDB"));
+                movie.setTitle(rs.getString("title"));
+                movie.setPlot(rs.getString("plot"));
+                movie.setYear(rs.getString("year"));
+                movie.setActors(selectActorsForFilm(movie.getTitle()));
+                movie.setDirectors(selectDirectorsForFilm(movie.getTitle()));
+                log.info("Adding " + movie.getTitle() + " to results");
+                log.info("Found the following actors: " + movie.getActors());
+                movies.add(movie);
             }
             log.info("Search complete");
-            log.debug("Found " + films.size() + " films related to the search for titles similar to " + filmTitle);
+            log.debug("Found " + movies.size() + " movies related to the search for titles similar to " + filmTitle);
             ps.close();
         } catch (Exception e) {
-            log.error("Film select error: " + e);
+            log.error("Movie select error: " + e);
         } finally {
             if (conn != null) {
                 try {
@@ -284,7 +284,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 }
             }
         }
-        return films;
+        return movies;
     }
 
     public Map<String, Map<String, String>> selectRolesForActor(String actorName) {
@@ -307,11 +307,11 @@ public class FilmDAOImplementation implements FilmDAO {
                 String currentFilmTitle = rs.getString("title");
                 String currentRole = rs.getString("role");
 
-                log.info("Working with actor: " + currentActorName + " role: " + currentRole + " film: " + currentFilmTitle);
+                log.info("Working with actor: " + currentActorName + " role: " + currentRole + " movie: " + currentFilmTitle);
                 if (roles.containsKey(currentActorName)) {
                     //Update the mappings for actors we have already looped over
                     Map<String, String> rolesForCurrentActor = roles.get(currentActorName);
-                    log.info("Adding the role of " + currentRole + " in the film " + currentFilmTitle + " for " + currentActorName);
+                    log.info("Adding the role of " + currentRole + " in the movie " + currentFilmTitle + " for " + currentActorName);
                     rolesForCurrentActor.put(currentFilmTitle, currentRole);
                     roles.put(currentActorName, rolesForCurrentActor);
                     log.info("mapping for actor " + currentActorName + ": " + roles.get(currentActorName));
@@ -326,7 +326,7 @@ public class FilmDAOImplementation implements FilmDAO {
             log.debug("Found " + roles.size() + " roles related to the search for actor " + actorName);
             ps.close();
         } catch (Exception e) {
-            log.error("Film select error: " + e);
+            log.error("Movie select error: " + e);
             log.error("Specific error: " + e.getMessage());
         } finally {
             if (conn != null) {
@@ -359,7 +359,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 log.info("Adding actor " + actors.get(actors.size() - 1).getActorName() + " to cast");
             }
             log.info("Search complete");
-            log.debug("Found " + actors.size() + " actors related to the film " + filmTitle);
+            log.debug("Found " + actors.size() + " actors related to the movie " + filmTitle);
             ps.close();
         } catch (Exception e) {
             log.error("Actor select error: " + e);
@@ -395,7 +395,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 log.info("Adding director " + directors.get(directors.size() - 1).getName() + " to list");
             }
             log.info("Search complete");
-            log.debug("Found " + directors.size() + " directors related to the film " + filmTitle);
+            log.debug("Found " + directors.size() + " directors related to the movie " + filmTitle);
             ps.close();
         } catch (Exception e) {
             log.error("Actor select error: " + e);

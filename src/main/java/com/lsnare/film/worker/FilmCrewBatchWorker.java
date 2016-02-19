@@ -3,8 +3,7 @@ package com.lsnare.film.worker;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.lsnare.film.dao.FilmDAO;
-import com.lsnare.film.dao.impl.FilmDAOImplementation;
-import com.lsnare.film.model.Film;
+import com.lsnare.film.model.Movie;
 import com.lsnare.film.service.HTTPService;
 import com.lsnare.film.util.FilmUtils;
 import org.apache.commons.logging.Log;
@@ -29,25 +28,25 @@ public class FilmCrewBatchWorker {
                 FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
                 //check film records that need to be updated
                 log.info("Processing film updates...");
-                List<Film> films = filmDAO.selectDirtyFilms();
-                log.info("Found " + films.size() + " films to update");
+                List<Movie> movies = filmDAO.selectDirtyFilms();
+                log.info("Found " + movies.size() + " movies to update");
 
                 //update all dirty records
-                for(Film film : films){
-                    String url = FilmUtils.myAPIFilmsURL + "&actors=F&idIMDB=" + film.idIMDB;
+                for(Movie movie : movies){
+                    String url = FilmUtils.myAPIFilmsURL + "&actors=F&idIMDB=" + movie.idIMDB;
                     String res = HTTPService.sendGet(url);
                     log.info("JSON returned: " + res);
 
                     Gson gson = new GsonBuilder().create();
-                    //Film JSON come back as an array, but will only have one result
-                    film = gson.fromJson(res, Film.class);
-                    filmDAO.insertActors(film.getActors());
-                    filmDAO.insertDirectors(film.getDirectors());
-                    filmDAO.markFilmAsClean(film.idIMDB);
+                    //Movie JSON come back as an array, but will only have one result
+                    movie = gson.fromJson(res, Movie.class);
+                    filmDAO.insertActors(movie.getActors());
+                    filmDAO.insertDirectors(movie.getDirectors());
+                    filmDAO.markFilmAsClean(movie.idIMDB);
                 }
 
                 //sleep
-                log.info("Film updates complete");
+                log.info("Movie updates complete");
                 Thread.sleep(RUN_INTERVAL);
             } catch (Exception e) {
 
