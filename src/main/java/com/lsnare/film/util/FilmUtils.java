@@ -144,7 +144,10 @@ public class FilmUtils {
             //Create a list of radio inputs with values set to each film's IMDB Id
             for (Movie movie : movies){
                 filmData += "<input type=\"radio\" name=\"film\" value=\"" + movie.getIdIMDB() + "\">"
-                        + "<i>" + movie.getTitle() + "</i>(" + movie.getYear() + ")";
+                        + "<i>" + movie.getTitle() + "</i>";
+                if(movie.getYear() != null && !movie.getYear().isEmpty()){
+                    filmData += " (" + movie.getYear() + ")";
+                }
                 if (movie.getDirectors().size() > 0){
                     filmData += ", directed by " + movie.getDirectors().get(0).getName();
                 }
