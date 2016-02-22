@@ -433,7 +433,7 @@ public class FilmDAOImplementation implements FilmDAO {
                 String currentYear = rs.getString("year");
 
                 log.info("Working with director " + currentDirectorName + " who filmed " + currentFilmTitle);
-                if (filmsByDirector.containsKey(directorName)) {
+                if (filmsByDirector.containsKey(currentDirectorName)) {
                     //Update the mappings for actors we have already looped over
                     Map<String, String> currentFilmToYearMapping = filmsByDirector.get(currentDirectorName);
                     log.info("Adding the film " + currentFilmTitle + " filmed by " + currentDirectorName);
