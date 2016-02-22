@@ -41,6 +41,13 @@ public class Main {
             return new ModelAndView(attributes, "login.ftl");
         }, new FreeMarkerEngine());
 
+        post("/login", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+            attributes.put("message", "Hello World!");
+
+            return new ModelAndView(attributes, "login.ftl");
+        }, new FreeMarkerEngine());
+
         //Page for adding a film to the database
         get("/add", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();

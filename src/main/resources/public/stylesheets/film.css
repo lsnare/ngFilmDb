@@ -69,8 +69,13 @@
         color: #2D383A; /* Outer Space */
     }
 
-    #login {
-        margin: auto;
-        position: absolute;
-        top: 0; left: 0; bottom: 0; right: 0;
+    dt {
+        font-weight: bold;
+        color: #2D383A; /* Outer Space */
+    }
+
+    input[type=text] {
+        background: #00755E; /* Tropical Rain Forest */
+        border-color: #2D383A; /* Outer Space */
+        color: #2D383A; /* Outer Space */
     }
