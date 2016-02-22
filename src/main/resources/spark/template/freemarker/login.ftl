@@ -7,11 +7,11 @@
         <form action="/login" method="post">
             <dl>
                 <dt> Username <dd><input type=text name="username">
-                <dt> Password <dd><input type=text name="password">
+                <dt> Password <dd><input type=password name="password">
             </dl>
             <input type=submit value="Sign In">
         </form>
-        <#if error??>${error}</#if>
+        <#if error??><h3>${error}<h3></#if>
         Not a member? Apply for membership <a href="/register">here</a>
     </body>
 </html>
