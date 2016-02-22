@@ -80,3 +80,10 @@
         color: #2D383A; /* Outer Space */
         font-weight: bold;
     }
+
+     input[type=password] {
+            background: #00755E; /* Tropical Rain Forest */
+            border-color: #2D383A; /* Outer Space */
+            color: #2D383A; /* Outer Space */
+            font-weight: bold;
+        }

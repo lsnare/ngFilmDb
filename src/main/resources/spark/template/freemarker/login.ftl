@@ -11,7 +11,7 @@
             </dl>
             <input type=submit value="Sign In">
         </form>
-        <#if error??><h3>${error}<h3></#if>
+        <#if error??><h3>${error}</h3></#if>
         Not a member? Apply for membership <a href="/register">here</a>
     </body>
 </html>

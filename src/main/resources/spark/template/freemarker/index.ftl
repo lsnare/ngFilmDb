@@ -5,6 +5,11 @@
     </head>
     <body bgcolor="#7BA05B"> <!-- Asparagus -->
         <h1><a href="/">Welcome to MyFilmDB</a></h1>
+        <#if loggedIn??>
+            <#if loggedIn == true>
+                <a href="/logout">Logout</a>
+            </#if>
+        </#if>
         <ul>
             <li><a href="add">Add a Film to the Database</a></li>
             <li>

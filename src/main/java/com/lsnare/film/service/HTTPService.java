@@ -1,9 +1,12 @@
 package com.lsnare.film.service;
 
+import spark.Request;
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.UUID;
 
 /**
  * Created by lucian on 9/2/15.
@@ -39,6 +42,4 @@ public class HTTPService {
         return response.toString();
 
     }
-
-
 }
