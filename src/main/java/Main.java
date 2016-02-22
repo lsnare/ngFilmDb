@@ -122,6 +122,27 @@ public class Main {
             return new ModelAndView(attributes, "searchActor.ftl");
         }, new FreeMarkerEngine());
 
+        get("/searchDirector", (request, response) -> {
+            Map<String, Object> attributes = new HashMap<>();
+            return new ModelAndView(attributes, "searchDirector.ftl");
+        }, new FreeMarkerEngine());
+
+        //Search for a director in the database
+        post("/searchDirector", (request, response) -> {
+            Map<String, Map<String, String>> results = new HashMap();
+            Map<String, Object> attributes = new HashMap();
+            String directorName = request.queryParams("directorNameSearch");
+            try {
+                directorName = URLDecoder.decode(directorName, "UTF-8");
+                results = FilmUtils.searchDatabaseForDirectors(directorName);
+                attributes = FilmUtils.buildDirectorFilmSearchResults(results); //TODO
+                log.info("Adding " + results.size() + " results to the page");
+            } catch (Exception e) {
+                System.out.println("Error on search: " + e);
+                attributes.put("error", e);
+            }
+            return new ModelAndView(attributes, "searchDirectors.ftl");
+        }, new FreeMarkerEngine());
     }
 
 }

@@ -132,6 +132,20 @@ public class FilmUtils {
         return rolesForActor;
     }
 
+    public static Map<String, Map<String,String>> searchDatabaseForDirectors(String directorName){
+        Map<String, Map<String, String>> filmsByDirector = new HashMap();
+        try{
+            ApplicationContext context =
+                    new ClassPathXmlApplicationContext("Spring-Module.xml");
+            FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
+            filmsByDirector = filmDAO.selectFilmsForDirector(directorName);
+            log.info("Found " + filmsByDirector.size() + " films by " + directorName + " when searching");
+        } catch(Exception e){
+            log.error("Error searching database for films by " + directorName + ": " + e);
+        }
+        return filmsByDirector;
+    }
+
     /*******************************/
     /**       Page Builders       **/
     /*******************************/
@@ -228,7 +242,7 @@ public class FilmUtils {
 
             actorData += "<h2>" + actorName + "</h2>";
             actorData += "<table border=1> <col width=\"150\"> <col width=\"150\">";
-            actorData += "<tr><th>Movie</th><th>Role</th></tr>";
+            actorData += "<tr><th>Film</th><th>Role</th></tr>";
 
             for(String nextFilm : rolesForActor.keySet()){
                 actorData += "<tr><td>" + nextFilm + "</td><td>" + rolesForActor.get(nextFilm) + "</td></tr>";
@@ -242,4 +256,28 @@ public class FilmUtils {
         return attributes;
     }
 
+    public static Map<String, Object> buildDirectorFilmSearchResults(Map<String, Map<String,String>> filmsByDirector){
+        String directorData = "";
+        Map<String, Object> attributes = new HashMap();
+
+        attributes.put("searchResultsHeader", "<h3>Search Results</h3>");
+
+        for (String directorName : filmsByDirector.keySet()){
+            Map<String, String> filmToYearMap = filmsByDirector.get(directorName);
+
+            directorData += "<h2>" + directorName + "</h2>";
+            directorData += "<table border=1> <col width=\"150\"> <col width=\"150\">";
+            directorData += "<tr><th>Film</th><th>Year</th></tr>";
+
+            for(String filmTitle : filmToYearMap.keySet()){
+                directorData += "<tr><td>" + filmTitle + "</td><td>" + filmToYearMap.get(filmTitle) + "</td></tr>";
+            }
+
+            directorData += "</table>";
+        }
+
+        attributes.put("directorData", directorData);
+
+        return attributes;
+    }
 }

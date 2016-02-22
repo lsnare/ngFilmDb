@@ -411,5 +411,57 @@ public class FilmDAOImplementation implements FilmDAO {
         }
         return directors;
     }
+
+    public Map<String, Map<String, String>> selectFilmsForDirector(String directorName){
+        String sql = "SELECT d.name, f.title, f.year "
+                + "FROM director d "
+                + "INNER JOIN director_film_assignment dfa on dfa.directorId = d.nameId "
+                + "INNER JOIN film f on f.idIMDB = dfa.filmId "
+                + "WHERE UPPER(d.name) LIKE UPPER(?)";
+        Map<String, Map<String, String>> filmsByDirector = new HashMap();
+
+        try {
+            conn = dataSource.getConnection();
+            log.info("Connection established");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, "%" + directorName + "%");
+            log.info("Searching for films by " + directorName + " in database");
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                String currentDirectorName = rs.getString("name");
+                String currentFilmTitle = rs.getString("title");
+                String currentYear = rs.getString("year");
+
+                log.info("Working with director " + currentDirectorName + " who filmed " + currentFilmTitle);
+                if (filmsByDirector.containsKey(directorName)) {
+                    //Update the mappings for actors we have already looped over
+                    Map<String, String> currentFilmToYearMapping = filmsByDirector.get(currentDirectorName);
+                    log.info("Adding the film " + currentFilmTitle + " filmed by " + currentDirectorName);
+                    currentFilmToYearMapping.put(currentFilmTitle, currentYear);
+                    filmsByDirector.put(currentDirectorName, currentFilmToYearMapping);
+                    log.info("Mapping for director " + currentDirectorName + ": " + filmsByDirector.get(currentDirectorName));
+                } else {
+                    Map currentFilmToYearMapping = new HashMap<String, String>();
+                    currentFilmToYearMapping.put(currentFilmTitle, currentYear);
+                    filmsByDirector.put(currentDirectorName, currentFilmToYearMapping);
+                }
+            }
+            log.info("Search complete");
+            log.debug("Found " + filmsByDirector.size() + " films related to the search for director " + directorName);
+            ps.close();
+        } catch (Exception e) {
+            log.error("Error searching films by director: " + e);
+            log.error("Specific error: " + e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("error dao: " + e.getMessage());
+                }
+            }
+        }
+        return filmsByDirector;
+    }
 }
 

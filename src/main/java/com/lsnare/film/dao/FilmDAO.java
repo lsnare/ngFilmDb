@@ -14,6 +14,7 @@ public interface FilmDAO {
     public void insert(Movie movie) throws DuplicateFilmException;
     public List<Movie> selectFilmsByTitle(String title);
     public Map<String, Map<String, String>> selectRolesForActor(String actorName);
+    public Map<String, Map<String,String>> selectFilmsForDirector(String directorName);
     public List<Movie> selectDirtyFilms();
     public void insertDirectors(List<Director> directors);
     public void insertActors(List<Actor> actors);

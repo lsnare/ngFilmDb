@@ -10,8 +10,9 @@
             <li>
                 <a> Search the Database </a>
                 <ul class="dropdown">
-                    <li><a href="search">Search Films</a></li>
-                    <li><a href="searchActor">Search Roles for an Actor</a></li>
+                    <li><a href="search">Search Films by Title</a></li>
+                    <li><a href="searchActor">Search Films by Actor</a></li>
+                    <li><a href="searchDirector">Search Films by Director</a></li>
                 </ul>
             </li>
         </ul>
