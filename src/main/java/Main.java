@@ -141,7 +141,7 @@ public class Main {
                 System.out.println("Error on search: " + e);
                 attributes.put("error", e);
             }
-            return new ModelAndView(attributes, "searchDirectors.ftl");
+            return new ModelAndView(attributes, "searchDirector.ftl");
         }, new FreeMarkerEngine());
     }
 
