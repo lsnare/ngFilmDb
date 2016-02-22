@@ -36,15 +36,27 @@ public class Main {
 
         get("/login", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("message", "Hello World!");
-
             return new ModelAndView(attributes, "login.ftl");
         }, new FreeMarkerEngine());
 
         post("/login", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("message", "Hello World!");
+            String username = request.queryParams("username");
+            String password = request.queryParams("password");
+            try {
 
+                ApplicationContext context =
+                        new ClassPathXmlApplicationContext("Spring-Module.xml");
+                FilmDAO filmDAO = (FilmDAO) context.getBean("filmDAO");
+                boolean isValidUser = filmDAO.login(username, password);
+                if (isValidUser){
+                    response.redirect("/");
+                } else {
+                    attributes.put("error", "Could not login as this user");
+                }
+            } catch(Exception e){
+                attributes.put("error", "Error logging in: " + e.getMessage());
+            }
             return new ModelAndView(attributes, "login.ftl");
         }, new FreeMarkerEngine());
 

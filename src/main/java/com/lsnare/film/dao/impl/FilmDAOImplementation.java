@@ -463,5 +463,31 @@ public class FilmDAOImplementation implements FilmDAO {
         }
         return filmsByDirector;
     }
+
+    public boolean login(String username, String password){
+        String sql = "SELECT * FROM User WHERE username = ? AND password = ?";
+        try {
+            conn = dataSource.getConnection();
+            log.info("Connection established");
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ps.setString(1, username);
+            ps.setString(2, password);
+            log.info("Searching for user " + username + " in database");
+            ResultSet rs = ps.executeQuery();
+            return rs.next();
+        } catch (Exception e) {
+            log.error("Error searching for user: " + e);
+            log.error("Specific error: " + e.getMessage());
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.close();
+                } catch (SQLException e) {
+                    log.error("error dao: " + e.getMessage());
+                }
+            }
+        }
+        return false;
+    }
 }
 
