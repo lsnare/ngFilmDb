@@ -98,7 +98,7 @@ public class Main {
             boolean authenticated = request.session().attribute("sessionId") != null;
             log.info("Session: " + request.session().attribute("sessionId"));
             if (!authenticated){
-                halt(401, "<html><body bgcolor=\"#7BA05B\"><h1>You do not have permission to perform this action. Please <a href=\"/login\">authenticate</a> to continue.</h1><img src=\"http://imgur.com/gallery/91IgVss\"/></body></html>");
+                halt(401, "<html><body bgcolor=\"#7BA05B\"><h1>You do not have permission to perform this action. Please <a href=\"/login\">authenticate</a> to continue.</h1><img src=\"http://i.imgur.com/91IgVss.gif\"/></body></html>");
             }
         });
 
