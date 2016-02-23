@@ -8,6 +8,8 @@
         <#if loggedIn??>
             <#if loggedIn == true>
                 <a href="/logout">Logout</a>
+            <#else>
+                <a href="/login">Login</a> to add and remove films
             </#if>
         </#if>
         <ul>

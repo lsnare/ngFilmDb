@@ -23,7 +23,6 @@ import static spark.Spark.get;
 public class Main {
 
     static Log log = LogFactory.getLog(Main.class);
-    static boolean loggedIn = false;
 
     public static void main(String[] args) {
         port(Integer.valueOf(System.getenv("PORT")));
@@ -31,7 +30,7 @@ public class Main {
 
         get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             return new ModelAndView(attributes, "index.ftl");
         }, new FreeMarkerEngine());
 
@@ -53,7 +52,6 @@ public class Main {
                     request.session(true);
                     request.session().attribute("sessionId", UUID.randomUUID().toString());
                     log.info("Created session: " + request.session().attribute("sessionId"));
-                    loggedIn = true;
                 } else {
                     attributes.put("error", "Could not login as this user");
                     return new ModelAndView(attributes, "login.ftl");
@@ -67,7 +65,6 @@ public class Main {
         get("/logout", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             request.session().invalidate();
-            loggedIn = false;
             response.redirect("/login");
             return new ModelAndView(attributes, "login.ftl");
         }, new FreeMarkerEngine());
@@ -75,14 +72,14 @@ public class Main {
         //Page for adding a film to the database
         get("/add", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             return new ModelAndView(attributes, "addFilm.ftl");
         }, new FreeMarkerEngine());
 
         //Endpoint for searching MyAPIFilms
         get("/searchMyAPIFilms", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             Movie[] results = new Movie[0];
             String filmTitle = request.queryParams("filmTitle");
             try {
@@ -109,7 +106,7 @@ public class Main {
         post("/insertFilm", (request, response) -> {
             log.info("Session: " + request.session().attribute("sessionId"));
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             String id = request.queryParams("film");
             Movie movie = new Movie();
             try {
@@ -130,7 +127,7 @@ public class Main {
 
         get("/search", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             return new ModelAndView(attributes, "searchFilm.ftl");
         }, new FreeMarkerEngine());
 
@@ -138,7 +135,7 @@ public class Main {
         post("/search", (request, response) -> {
             List<Movie> results = new ArrayList<>();
             Map<String, Object> attributes = new HashMap();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             String filmTitle = request.queryParams("filmTitleSearch");
             try {
                 filmTitle = URLDecoder.decode(filmTitle, "UTF-8");
@@ -154,7 +151,7 @@ public class Main {
 
         get("/searchActor", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             return new ModelAndView(attributes, "searchActor.ftl");
         }, new FreeMarkerEngine());
 
@@ -162,7 +159,7 @@ public class Main {
         post("/searchActor", (request, response) -> {
             Map<String, Map<String, String>> results = new HashMap();
             Map<String, Object> attributes = new HashMap();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             String actorName = request.queryParams("actorNameSearch");
             try {
                 actorName = URLDecoder.decode(actorName, "UTF-8");
@@ -178,7 +175,7 @@ public class Main {
 
         get("/searchDirector", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             return new ModelAndView(attributes, "searchDirector.ftl");
         }, new FreeMarkerEngine());
 
@@ -186,7 +183,7 @@ public class Main {
         post("/searchDirector", (request, response) -> {
             Map<String, Map<String, String>> results = new HashMap();
             Map<String, Object> attributes = new HashMap();
-            attributes.put("loggedIn", loggedIn);
+            attributes.put("loggedIn", request.session().attribute("sessionId") != null);
             String directorName = request.queryParams("directorNameSearch");
             try {
                 directorName = URLDecoder.decode(directorName, "UTF-8");
