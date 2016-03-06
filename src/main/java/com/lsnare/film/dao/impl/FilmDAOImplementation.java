@@ -24,7 +24,7 @@ public class FilmDAOImplementation implements FilmDAO {
     private DataSource dataSource;
     private Movie movie;
     Log log = LogFactory.getLog(FilmDAOImplementation.class);
-    Connection conn = null;
+    private static Connection conn = null;
 
     public void setDataSource(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -63,7 +63,9 @@ public class FilmDAOImplementation implements FilmDAO {
         String sqlActor = "INSERT INTO actor VALUES(?,?)";
         String sqlActorFilmRole = "INSERT INTO actor_film_role VALUES(?,?,?)";
         try{
-            Connection conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
         } catch (Exception e) {
             log.error(e.getMessage());
         }
@@ -120,7 +122,9 @@ public class FilmDAOImplementation implements FilmDAO {
         String sqlDirector = "INSERT INTO director VALUES(?,?)";
         String sqlDirectorFilmAssignment = "INSERT INTO director_film_assignment VALUES(?,?)";
         try {
-            Connection conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
         } catch (Exception e){
             log.error(e.getMessage());
         }
@@ -172,7 +176,10 @@ public class FilmDAOImplementation implements FilmDAO {
     public void insert(Movie movie) throws DuplicateFilmException {
         this.movie = movie;
         String sql = "INSERT INTO film VALUES(?, ?, ?, ?)";
-        try (Connection conn = dataSource.getConnection()) {
+        try {
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, movie.getIdIMDB());
@@ -197,7 +204,9 @@ public class FilmDAOImplementation implements FilmDAO {
         List<Movie> movies = new ArrayList<>();
 
         try {
-            Connection conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ResultSet rs = ps.executeQuery();
@@ -229,7 +238,9 @@ public class FilmDAOImplementation implements FilmDAO {
         String sql = "UPDATE film WHERE idIMDB = ? SET isDataComplete = TRUE";
 
         try {
-            Connection conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, idIMDB);
@@ -253,7 +264,9 @@ public class FilmDAOImplementation implements FilmDAO {
         String sql = "SELECT * FROM film WHERE UPPER(title) LIKE UPPER(?)";
         List<Movie> movies = new ArrayList<>();
         try {
-            conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + filmTitle + "%");
@@ -296,7 +309,9 @@ public class FilmDAOImplementation implements FilmDAO {
         Map<String, Map<String, String>> roles = new HashMap();
 
         try {
-            conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + actorName + "%");
@@ -349,7 +364,9 @@ public class FilmDAOImplementation implements FilmDAO {
         List<Actor> actors = new ArrayList();
 
         try {
-            conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + filmTitle + "%");
@@ -385,7 +402,9 @@ public class FilmDAOImplementation implements FilmDAO {
         List<Director> directors = new ArrayList();
 
         try {
-            conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + filmTitle + "%");
@@ -421,7 +440,9 @@ public class FilmDAOImplementation implements FilmDAO {
         Map<String, Map<String, String>> filmsByDirector = new HashMap();
 
         try {
-            conn = dataSource.getConnection();
+            if (conn == null || conn.isClosed()){
+                conn = dataSource.getConnection();
+            }
             log.info("Connection established");
             PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, "%" + directorName + "%");
