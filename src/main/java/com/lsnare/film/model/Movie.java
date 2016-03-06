@@ -17,7 +17,7 @@ public class Movie {
     public String rated;
     public String rating;
     public String releaseDate;
-    public List<String> runtime;
+    public String runtime;
     public String simplePlot;
     public String title;
     public String type;
@@ -141,11 +141,11 @@ public class Movie {
         this.releaseDate = releaseDate;
     }
 
-    public List<String> getRuntime() {
+    public String getRuntime() {
         return runtime;
     }
 
-    public void setRuntime(List<String> runtime) {
+    public void setRuntime(String runtime) {
         this.runtime = runtime;
     }
 
