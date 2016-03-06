@@ -154,7 +154,7 @@ public class FilmUtils {
         Map<String, Object> attributes = new HashMap();
         String filmData = "";
         if (movies.length > 0){
-            filmData += "<fieldset>";
+            filmData += "<fieldset><legend>IMDB Search Results</legend>";
             //Create a list of radio inputs with values set to each film's IMDB Id
             for (Movie movie : movies){
                 filmData += "<input type=\"radio\" name=\"film\" value=\"" + movie.getIdIMDB() + "\">"

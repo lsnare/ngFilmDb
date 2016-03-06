@@ -64,6 +64,16 @@
         font-weight: bold;
     }
 
+    fieldset {
+        border:1px solid #2D383A; /* Outer Space */
+    }
+
+    legend {
+        border:1px solid #2D383A; /* Outer Space */
+        color: #2D383A; /* Outer Space */
+        text-align: left;
+    }
+
     th {
         background: #00755E; /* Tropical Rain Forest */
         color: #2D383A; /* Outer Space */
@@ -86,4 +96,4 @@
             border-color: #2D383A; /* Outer Space */
             color: #2D383A; /* Outer Space */
             font-weight: bold;
-        }
+     }
