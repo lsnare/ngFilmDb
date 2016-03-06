@@ -31,25 +31,28 @@ public class FilmCrewBatchWorker {
                 List<Movie> movies = filmDAO.selectDirtyFilms();
                 log.info("Found " + movies.size() + " movies to update");
 
-                //update all dirty records
-                for(Movie movie : movies){
-                    String url = FilmUtils.myAPIFilmsURL + "&actors=F&idIMDB=" + movie.idIMDB;
-                    String res = HTTPService.sendGet(url);
-                    log.info("JSON returned: " + res);
+                if (!movies.isEmpty()) {
+                    //update all dirty records
+                    for (Movie movie : movies) {
+                        String url = FilmUtils.myAPIFilmsURL;
+                        url = url.replace("__ATTR_TO_SEARCH__", "idIMDB="+movie.getIdIMDB()) + "&actors=F";
+                        String res = HTTPService.sendGet(url);
+                        log.info("JSON returned: " + res);
 
-                    Gson gson = new GsonBuilder().create();
-                    //Movie JSON come back as an array, but will only have one result
-                    movie = gson.fromJson(res, Movie.class);
-                    filmDAO.insertActors(movie.getActors());
-                    filmDAO.insertDirectors(movie.getDirectors());
-                    filmDAO.markFilmAsClean(movie.idIMDB);
+                        Gson gson = new GsonBuilder().create();
+                        //Movie JSON come back as an array, but will only have one result
+                        movie = gson.fromJson(res, Movie.class);
+                        filmDAO.insertActors(movie.getActors());
+                        filmDAO.insertDirectors(movie.getDirectors());
+                        filmDAO.markFilmAsClean(movie.idIMDB);
+                    }
+
+                    //sleep
+                    log.info("Movie updates complete");
                 }
-
-                //sleep
-                log.info("Movie updates complete");
                 Thread.sleep(RUN_INTERVAL);
             } catch (Exception e) {
-
+                log.error("Error when processing dirty movies: " + e.getMessage());
             }
         }
     }
