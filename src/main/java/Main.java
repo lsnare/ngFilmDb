@@ -23,7 +23,14 @@ import static spark.Spark.get;
 public class Main {
 
     static Log log = LogFactory.getLog(Main.class);
-
+    private static final String accessDeniedPageHTML =
+            "<html>" +
+                    "<body bgcolor=\"#7BA05B\">" +
+                        "<h1>You do not have permission to perform this action. </h1>" +
+                        "<img src=\"http://i.imgur.com/91IgVss.gif\"/>" +
+                        "<h1>Please <a href=\"/login\">authenticate</a> to continue.</h1>" +
+                    "</body>" +
+            "</html>";
     public static void main(String[] args) {
         port(Integer.valueOf(System.getenv("PORT")));
         staticFileLocation("/public");
@@ -98,7 +105,7 @@ public class Main {
             boolean authenticated = request.session().attribute("sessionId") != null;
             log.info("Session: " + request.session().attribute("sessionId"));
             if (!authenticated){
-                halt(401, "<html><body bgcolor=\"#7BA05B\"><h1>You do not have permission to perform this action. Please <a href=\"/login\">authenticate</a> to continue.</h1><img src=\"http://i.imgur.com/91IgVss.gif\"/></body></html>");
+                halt(401, accessDeniedPageHTML);
             }
         });
 
