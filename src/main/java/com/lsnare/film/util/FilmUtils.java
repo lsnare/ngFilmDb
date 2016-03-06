@@ -7,6 +7,7 @@ import com.lsnare.film.exception.MyAPIFilmsConnectionException;
 import com.lsnare.film.model.Actor;
 import com.lsnare.film.model.Director;
 import com.lsnare.film.model.Movie;
+import com.lsnare.film.model.Result;
 import com.lsnare.film.service.HTTPService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,30 +34,6 @@ public class FilmUtils {
     /*******************************/
     /**        Search Utils       **/
     /*******************************/
-
-    private class Result {
-        public Data getData() {
-            return data;
-        }
-
-        public void setData(Data data) {
-            this.data = data;
-        }
-
-        Data data;
-    }
-
-    private class Data{
-        public Movie[] getMovies() {
-            return movies;
-        }
-
-        public void setMovies(Movie[] movies) {
-            this.movies = movies;
-        }
-
-        Movie[] movies;
-    }
 
     public static Movie[] searchMyAPIFilmsByTitle(String filmTitle) throws MyAPIFilmsConnectionException{
         //Add title search-specific filters onto URL
