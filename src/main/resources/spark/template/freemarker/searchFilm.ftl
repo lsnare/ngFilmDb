@@ -2,7 +2,8 @@
     <body>
         <#include "index.ftl">
         <form action = "/search" method = "post">
-            <input type="text" name="filmTitleSearch"/> <input type="submit" name="add" value="Search the Database" />
+            <p><b>Title</b> <input type="text" name="filmTitleSearch"/></p>
+            <p><input type="submit" name="add" value="Search the Database" /></p>
         </form>
 
         <#if searchResultsHeader??>
