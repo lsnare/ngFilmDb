@@ -1,0 +1,103 @@
+/* CSS for creating a dropdown menu using unordered list*/
+    ul{
+        padding: 0;
+        list-style: none;
+        white-space: nowrap;
+    }
+    ul li{
+        display: inline-block;
+        position: relative;
+        line-height: 50px;
+        text-align: left;
+        color: #2D383A; /* Outer Space */
+        background: #00755E; /* Tropical Rain Forest */
+        font-weight: bold;
+        border-style: solid;
+        border-width: 2px;
+        border-color: #2D383A; /* Outer Space */
+    }
+
+    ul li a{
+        display: block;
+        padding: 0px 25px;
+        color: #2D383A; /* Outer Space */
+        text-decoration: none;
+    }
+    ul li a:hover{
+        color: #00755E; /* Tropical Rain Forest */
+        background: #2D383A; /* Outer Space */
+        border-color: #00755E; /* Tropical Rain Forest */
+    }
+    ul li ul.dropdown{
+        min-width: 250px;
+        background: #00755E; /* Tropical Rain Forest */
+        font-weight: bold;
+        display: none;
+        position: absolute;
+        z-index: 999;
+        left: 0;
+    }
+    ul li:hover ul.dropdown{
+        display: block;
+    }
+    ul li ul.dropdown li{
+        display: block;
+    }
+
+    h1 a{
+        color: #2D383A; /* Outer Space */
+        text-decoration: none;
+    }
+
+    h3 {
+        color: #2D383A; /* Outer Space */
+    }
+
+    /* Styling for HTML form */
+    input[type=submit] {
+        padding:5px 15px; background:#ccc; border:0 none;
+        cursor:pointer;
+        -webkit-border-radius: 5px;
+        border-radius: 5px;
+        border-color: #2D383A; /* Outer Space */
+        background: #00755E; /* Tropical Rain Forest */
+        font-weight: bold;
+    }
+
+    fieldset {
+        border:1px solid #2D383A; /* Outer Space */
+    }
+
+    legend {
+        border:1px solid #2D383A; /* Outer Space */
+        color: #2D383A; /* Outer Space */
+        text-align: left;
+    }
+
+    th {
+        background: #00755E; /* Tropical Rain Forest */
+        color: #2D383A; /* Outer Space */
+    }
+
+    dt {
+        font-weight: bold;
+        color: #2D383A; /* Outer Space */
+    }
+
+    input[type=text] {
+        background: #00755E; /* Tropical Rain Forest */
+        border-color: #2D383A; /* Outer Space */
+        color: #2D383A; /* Outer Space */
+        font-weight: bold;
+    }
+
+     input[type=password] {
+            background: #00755E; /* Tropical Rain Forest */
+            border-color: #2D383A; /* Outer Space */
+            color: #2D383A; /* Outer Space */
+            font-weight: bold;
+     }
+
+     b{
+        color: #2D383A; /* Outer Space */
+     }
